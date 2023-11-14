@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CarService } from './car.service';
 import { CreateCarDto } from './dto/create-car.dto';
@@ -18,6 +19,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+import JwtAuthGuard from 'src/auth/jwt/jwt-auth.guard';
 
 @Controller('cars')
 @ApiTags('Cars')
@@ -27,6 +29,7 @@ export class CarController {
   @Post()
   @ApiOperation({ summary: '(Car) Create new car' })
   @ApiBody({ type: CreateCarDto })
+  @UseGuards(JwtAuthGuard)
   create(@Body() createCarDto: CreateCarDto) {
     return this.carService.create(createCarDto);
   }
@@ -47,6 +50,7 @@ export class CarController {
     type: 'number',
     description: 'The limit of the page',
   })
+  @UseGuards(JwtAuthGuard)
   findAll(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
     return this.carService.findAll({ page: +page, limit: +limit });
   }
@@ -58,6 +62,7 @@ export class CarController {
     name: 'id',
     description: 'The car id',
   })
+  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.carService.findOne(+id);
   }
@@ -70,6 +75,7 @@ export class CarController {
     description: 'The car id',
   })
   @ApiBody({ type: UpdateCarDto })
+  @UseGuards(JwtAuthGuard)
   update(@Param('id') id: string, @Body() updateCarDto: UpdateCarDto) {
     return this.carService.update(+id, updateCarDto);
   }

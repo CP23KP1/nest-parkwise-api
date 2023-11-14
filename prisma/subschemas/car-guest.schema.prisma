@@ -1,0 +1,13 @@
+model CarGuest {
+    @@map("car_guest")
+
+    id    Int     @id @default(autoincrement())
+    licensePlate String
+    color String
+    brand String
+    model String
+    year Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deletedAt DateTime?
+}

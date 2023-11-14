@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { StaffService } from './staff.service';
 import { CreateStaffDto } from './dto/create-staff.dto';
@@ -18,6 +19,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+import JwtAuthGuard from 'src/auth/jwt/jwt-auth.guard';
 
 @Controller('staffs')
 @ApiTags('Staffs')
@@ -27,6 +29,7 @@ export class StaffController {
   @Post()
   @ApiOperation({ summary: '(Staff) Create a new staff' })
   @ApiBody({ type: CreateStaffDto })
+  @UseGuards(JwtAuthGuard)
   create(@Body() createStaffDto: CreateStaffDto) {
     return this.staffService.create(createStaffDto);
   }
@@ -35,6 +38,7 @@ export class StaffController {
   @ApiOperation({ summary: '(Staff) Get all staff' })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
+  @UseGuards(JwtAuthGuard)
   findAll(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
     return this.staffService.findAll({ page, limit });
   }
@@ -42,6 +46,7 @@ export class StaffController {
   @Get(':id')
   @ApiOperation({ summary: '(Staff) Get a staff by id' })
   @ApiParam({ name: 'id', required: true, type: Number, example: 1 })
+  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.staffService.findOne(+id);
   }
@@ -50,6 +55,7 @@ export class StaffController {
   @ApiOperation({ summary: '(Staff) Update a staff by id' })
   @ApiParam({ name: 'id', required: true, type: Number, example: 1 })
   @ApiBody({ type: UpdateStaffDto })
+  @UseGuards(JwtAuthGuard)
   update(@Param('id') id: string, @Body() updateStaffDto: UpdateStaffDto) {
     return this.staffService.update(+id, updateStaffDto);
   }

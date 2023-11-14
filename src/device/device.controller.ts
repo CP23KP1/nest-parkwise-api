@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { DeviceService } from './device.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
@@ -18,6 +19,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+import JwtAuthGuard from 'src/auth/jwt/jwt-auth.guard';
 
 @Controller('devices')
 @ApiTags('Devices')
@@ -27,6 +29,7 @@ export class DeviceController {
   @Post()
   @ApiOperation({ summary: '(Device) Create new device' })
   @ApiBody({ type: CreateDeviceDto })
+  @UseGuards(JwtAuthGuard)
   create(@Body() createDeviceDto: CreateDeviceDto) {
     return this.deviceService.create(createDeviceDto);
   }
@@ -35,6 +38,7 @@ export class DeviceController {
   @ApiOperation({ summary: '(Device) Get all devices' })
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'limit', required: false })
+  @UseGuards(JwtAuthGuard)
   findAll(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
     return this.deviceService.findAll({ page, limit });
   }
@@ -42,6 +46,7 @@ export class DeviceController {
   @Get(':id')
   @ApiOperation({ summary: '(Device) Get by device id' })
   @ApiParam({ name: 'id', required: true })
+  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.deviceService.findOne(+id);
   }
@@ -50,6 +55,7 @@ export class DeviceController {
   @ApiOperation({ summary: '(Device) Update device by id' })
   @ApiParam({ name: 'id', required: true })
   @ApiBody({ type: UpdateDeviceDto })
+  @UseGuards(JwtAuthGuard)
   update(@Param('id') id: string, @Body() updateDeviceDto: UpdateDeviceDto) {
     return this.deviceService.update(+id, updateDeviceDto);
   }

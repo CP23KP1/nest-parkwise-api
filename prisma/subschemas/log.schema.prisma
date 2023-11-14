@@ -1,0 +1,17 @@
+model Log {
+    @@map("log")
+
+    id    Int     @id @default(autoincrement())
+    zoneId Int
+    zone Zone   @relation(fields: [zoneId], references: [id])
+    staffId Int
+    staff Staff   @relation(fields: [staffId], references: [id])
+    carId Int?
+    car   Car     @relation(fields: [carId], references: [id], nullable: true)
+    carGuestId Int?
+    carGuest CarGuest @relation(fields: [carGuestId], references: [id], nullable: true)
+    timestamp DateTime @default(now())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deletedAt DateTime?
+}
