@@ -1,0 +1,14 @@
+model Device {
+    @@map("device")
+
+    id    Int     @id @default(autoincrement())
+    name  String
+    description String?
+    type String
+    price Float @default(0)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deletedAt DateTime?
+    zone Zone @relation(fields: [zoneId], references: [id])
+    zoneId Int
+}

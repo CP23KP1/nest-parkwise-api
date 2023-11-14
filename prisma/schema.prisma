@@ -1,0 +1,90 @@
+//🧩Don't Edit this file.✨Generated in Mon Nov 13 2023 23:40:04 GMT+0700 (Indochina Time)✨
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Car {
+
+  id           Int       @id @default(autoincrement())
+  licensePlate String
+  color        String
+  brand        String
+  model        String
+  year         Int
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  staff        Staff     @relation(fields: [staffId], references: [id])
+  staffId      Int
+
+  @@map("car")
+}
+
+model Device {
+
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  type        String
+  price       Float     @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  zone        Zone      @relation(fields: [zoneId], references: [id])
+  zoneId      Int
+
+  @@map("device")
+}
+
+model Staff {
+
+  id          Int       @id @default(autoincrement())
+  firstname   String
+  lastname    String
+  email       String
+  phoneNumber String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  cars        Car[]
+
+  @@map("staff")
+}
+
+model User {
+
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String?
+  firstname String    @db.VarChar(255)
+  lastname  String    @db.VarChar(255)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("user")
+}
+
+model Zone {
+
+  id              Int       @id @default(autoincrement())
+  name            String
+  description     String?
+  occupancy       Int
+  maximumCapacity Int
+  address         String?
+  latitude        Float?
+  longitude       Float?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+  devices         Device[]
+
+  @@map("zone")
+}

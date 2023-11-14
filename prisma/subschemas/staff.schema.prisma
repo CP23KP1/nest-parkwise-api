@@ -1,0 +1,13 @@
+model Staff {
+    @@map("staff")
+
+    id    Int     @id @default(autoincrement())
+    firstname  String
+    lastname  String
+    email String
+    phoneNumber String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deletedAt DateTime?
+    cars Car[]
+}
