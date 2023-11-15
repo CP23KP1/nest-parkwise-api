@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateCarDto {
   @ApiProperty({
@@ -40,7 +40,7 @@ export class CreateCarDto {
   @ApiProperty({
     type: 'number',
   })
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   staffId: number;
 }
