@@ -15,11 +15,14 @@ export class DeviceService {
   }
 
   async findAll({ page, limit }: { page: number; limit: number }) {
-    const total = await this.prismaService.device.count({});
+    const total = await this.prismaService.device.count({
+      where: { deletedAt: null },
+    });
 
     const data = await this.prismaService.device.findMany({
       skip: (page - 1) * limit,
       take: limit,
+      where: { deletedAt: null },
     });
 
     return metaDataConvert({
@@ -42,6 +45,9 @@ export class DeviceService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} device`;
+    return this.prismaService.device.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
   }
 }

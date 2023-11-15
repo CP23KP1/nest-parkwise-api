@@ -13,11 +13,14 @@ export class CarService {
   }
 
   async findAll({ page, limit }: { page: number; limit: number }) {
-    const total = await this.prismaService.car.count({});
+    const total = await this.prismaService.car.count({
+      where: { deletedAt: null },
+    });
 
     const data = await this.prismaService.car.findMany({
       skip: (page - 1) * limit,
       take: limit,
+      where: { deletedAt: null },
     });
 
     return metaDataConvert({
@@ -37,6 +40,9 @@ export class CarService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} car`;
+    return this.prismaService.car.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
   }
 }
