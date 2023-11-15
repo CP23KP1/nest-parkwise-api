@@ -6,6 +6,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { contentParser } from 'fastify-multer';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -16,6 +17,12 @@ async function bootstrap() {
   app.register(contentParser);
 
   app.setGlobalPrefix(process.env.API_PREFIX || '/v1');
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
 
   app.enableCors({
     origin: '*',
