@@ -17,10 +17,6 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
   }
 
   async validate(payload: TokenPayload) {
-    return { id: payload.id, email: payload.email, type: payload.type };
-    // return this.userService.findBy({
-    //   userId: payload.userId,
-    //   userRole: payload.userRole,
-    // });
+    return { id: payload.id };
   }
 }

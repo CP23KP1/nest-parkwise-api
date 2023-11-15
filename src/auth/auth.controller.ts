@@ -14,6 +14,7 @@ import { RegisterResponse } from './dto/response/register.response';
 import { LoginResponse } from './dto/response/login.response';
 import JwtAuthGuard from './jwt/jwt-auth.guard';
 import AuthUserRequest from './types/auth-user-request.type';
+import JwtRefreshGuard from './jwt/jwt-refresh.guard';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -40,6 +41,20 @@ export class AuthController {
   })
   register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
+  }
+
+  @Get('/refresh')
+  @ApiOperation({ summary: 'Refresh the current user token' })
+  @ApiOkResponse({})
+  @UseGuards(JwtRefreshGuard)
+  async refreshToken(@Request() req: AuthUserRequest) {
+    const { access_token } = this.authService.signToken(
+      ['access_token'],
+      req.user,
+    );
+    return {
+      access_token: access_token,
+    };
   }
 
   @Get('/me')
