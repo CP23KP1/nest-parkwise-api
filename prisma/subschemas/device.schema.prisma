@@ -4,8 +4,9 @@ model Device {
     id    Int     @id @default(autoincrement())
     name  String
     description String?
-    type String
+    brand String?
     price Float @default(0)
+    deviceSerial String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     deletedAt DateTime?

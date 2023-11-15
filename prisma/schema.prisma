@@ -1,4 +1,4 @@
-//🧩Don't Edit this file.✨Generated in Mon Nov 13 2023 23:40:04 GMT+0700 (Indochina Time)✨
+//🧩Don't Edit this file.✨Generated in Wed Nov 15 2023 11:43:21 GMT+0700 (Indochina Time)✨
 
 generator client {
   provider = "prisma-client-js"
@@ -7,6 +7,22 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model CarGuest {
+
+  id           Int       @id @default(autoincrement())
+  licensePlate String
+  color        String
+  brand        String
+  model        String
+  year         Int
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  Log          Log[]
+
+  @@map("car_guest")
 }
 
 model Car {
@@ -22,24 +38,45 @@ model Car {
   deletedAt    DateTime?
   staff        Staff     @relation(fields: [staffId], references: [id])
   staffId      Int
+  Log          Log[]
 
   @@map("car")
 }
 
 model Device {
 
-  id          Int       @id @default(autoincrement())
-  name        String
-  description String?
-  type        String
-  price       Float     @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
-  zone        Zone      @relation(fields: [zoneId], references: [id])
-  zoneId      Int
+  id           Int       @id @default(autoincrement())
+  name         String
+  description  String?
+  brand        String?
+  price        Float     @default(0)
+  deviceSerial String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  zone         Zone      @relation(fields: [zoneId], references: [id])
+  zoneId       Int
 
   @@map("device")
+}
+
+model Log {
+
+  id         Int       @id @default(autoincrement())
+  zoneId     Int
+  zone       Zone      @relation(fields: [zoneId], references: [id])
+  staffId    Int
+  staff      Staff     @relation(fields: [staffId], references: [id])
+  carId      Int?
+  car        Car?      @relation(fields: [carId], references: [id])
+  carGuestId Int?
+  carGuest   CarGuest? @relation(fields: [carGuestId], references: [id])
+  timestamp  DateTime  @default(now())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  @@map("log")
 }
 
 model Staff {
@@ -53,6 +90,7 @@ model Staff {
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
   cars        Car[]
+  Log         Log[]
 
   @@map("staff")
 }
@@ -85,6 +123,7 @@ model Zone {
   updatedAt       DateTime  @updatedAt
   deletedAt       DateTime?
   devices         Device[]
+  Log             Log[]
 
   @@map("zone")
 }
