@@ -45,7 +45,7 @@ export class ZoneController {
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
   @UseGuards(JwtAuthGuard)
-  findAll(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
+  findAll(@Query('page') page = 1, @Query('limit') limit = 10) {
     return this.zoneService.findAll({ page: +page, limit: +limit });
   }
 
