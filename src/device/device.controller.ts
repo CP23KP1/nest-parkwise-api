@@ -62,6 +62,7 @@ export class DeviceController {
 
   @Delete(':id')
   @ApiOperation({ summary: '(Device) Delete device by id' })
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.deviceService.remove(+id);
   }
