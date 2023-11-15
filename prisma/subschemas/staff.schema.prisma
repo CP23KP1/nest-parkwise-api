@@ -6,8 +6,18 @@ model Staff {
     lastname  String
     email String
     phoneNumber String
+    position StaffPosition @default(Other)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     deletedAt DateTime?
     cars Car[]
+}
+
+enum StaffPosition {
+    Professor
+    Researcher
+    Assistant
+    Staff
+    Student
+    Other
 }
