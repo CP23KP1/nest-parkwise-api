@@ -6,7 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt/jwt.strategy';
 import { JwtRefreshTokenStrategy } from './jwt/jwt-refresh-token.strategy';
 import { ConfigService } from '@nestjs/config';
-import { UserService } from 'src/user/user.service';
+import { AdminService } from 'src/admin/admin.service';
 
 @Module({
   imports: [JwtModule.register({})],
@@ -17,7 +17,7 @@ import { UserService } from 'src/user/user.service';
     JwtStrategy,
     JwtRefreshTokenStrategy,
     ConfigService,
-    UserService,
+    AdminService,
   ],
 })
 export class AuthModule {}

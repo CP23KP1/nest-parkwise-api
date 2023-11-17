@@ -4,7 +4,6 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 // import { UserService } from 'src/user/user.service';
 import { TokenPayload } from '../types/token-payload.type';
-import { UserService } from 'src/user/user.service';
 import { PrismaService } from 'src/prisma.service';
 // import { LoginType } from '../enums/login-type.enum';
 
@@ -21,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: TokenPayload) {
-    return await this.prismaService.user.findUnique({
+    return await this.prismaService.admin.findUnique({
       where: {
         id: payload.id,
       },
