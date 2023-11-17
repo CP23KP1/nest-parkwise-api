@@ -1,4 +1,17 @@
-//🧩Don't Edit this file.✨Generated in Wed Nov 15 2023 11:43:21 GMT+0700 (Indochina Time)✨
+//🧩Don't Edit this file.✨Generated in Thu Nov 16 2023 13:05:24 GMT+0700 (Indochina Time)✨
+model Admin {
+
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String?
+  firstname String    @db.VarChar(255)
+  lastname  String    @db.VarChar(255)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("admin")
+}
 
 generator client {
   provider = "prisma-client-js"
@@ -81,13 +94,14 @@ model Log {
 
 model Staff {
 
-  id          Int       @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   firstname   String
   lastname    String
   email       String
   phoneNumber String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  position    StaffPosition @default(Other)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
   deletedAt   DateTime?
   cars        Car[]
   Log         Log[]
@@ -95,18 +109,13 @@ model Staff {
   @@map("staff")
 }
 
-model User {
-
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
-  password  String?
-  firstname String    @db.VarChar(255)
-  lastname  String    @db.VarChar(255)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-
-  @@map("user")
+enum StaffPosition {
+  Professor
+  Researcher
+  Assistant
+  Staff
+  Student
+  Other
 }
 
 model Zone {
