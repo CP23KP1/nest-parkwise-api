@@ -37,6 +37,9 @@ export class StaffService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} staff`;
+    return this.prismaService.staff.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
   }
 }

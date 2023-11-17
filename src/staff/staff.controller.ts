@@ -62,6 +62,7 @@ export class StaffController {
 
   @Delete(':id')
   @ApiOperation({ summary: '(Staff) Delete a staff by id' })
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.staffService.remove(+id);
   }

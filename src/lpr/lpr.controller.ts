@@ -29,7 +29,7 @@ export class LprController {
     const data = await new MyBard().getBard().ask(
       `Please scan this license plate
     - Example Data should be around here (Not sure if it's correct or not please fullfill it to null)
-    - Answer should be only 1 JSON Data and no other text
+    - Answer should be only 1 JSON Data and no other text, i fking said only one JSON Data
     {
       licensePlate: "กก1234", // No space, Must be Thai License Plate
       province: "กรุงเทพมหานคร",

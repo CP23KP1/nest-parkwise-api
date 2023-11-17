@@ -6,7 +6,7 @@ import { ZoneModule } from './zone/zone.module';
 import { CarModule } from './car/car.module';
 import { UserModule } from './user/user.module';
 import { LogModule } from './log/log.module';
-import { LprController } from './lpr/lpr.controller';
+import { LprModule } from './lpr/lpr.module';
 
 @Module({
   imports: [
@@ -17,8 +17,9 @@ import { LprController } from './lpr/lpr.controller';
     CarModule,
     UserModule,
     LogModule,
+    LprModule,
   ],
-  controllers: [LprController],
+  controllers: [],
   providers: [],
 })
 export class AppModule {}
