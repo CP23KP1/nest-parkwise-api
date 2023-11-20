@@ -20,7 +20,7 @@ jobs:
           QA_ENV: ${{ secrets.QA_ENV }}
         run: |
           touch qa-parkwise-api/.env
-          echo "$ENV" >> qa-parkwise-api/.env
+          echo "$QA_ENV" >> qa-parkwise-api/.env
 
       - name: Docker compose 🐳
         run: docker-compose -f qa-parkwise-api/docker-compose.yml up -d --build qa-parkwise-api
