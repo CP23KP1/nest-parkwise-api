@@ -1,0 +1,26 @@
+name: QA-LIVE
+
+on:
+  push:
+    branches:
+      - qa-live
+
+jobs:
+  QA-LIVE:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@master
+        with:
+          path: 'qa-parkwise-api/'
+
+      - name: Setup env 🛠
+        env:
+          QA_ENV: ${{ secrets.QA_ENV }}
+        run: |
+          touch qa-parkwise-api/.env
+          echo "$ENV" >> qa-parkwise-api/.env
+
+      - name: Docker compose 🐳
+        run: docker-compose -f qa-parkwise-api/docker-compose.yml up -d --build qa-parkwise-api
