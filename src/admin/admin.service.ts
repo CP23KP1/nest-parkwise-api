@@ -1,26 +1,51 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
+import { PrismaService } from 'src/prisma.service';
+import { metaDataConvert } from 'src/utils/converter.util';
 
 @Injectable()
 export class AdminService {
+  constructor(private readonly prismaService: PrismaService) {}
+
   create(createAdminDto: CreateAdminDto) {
-    return 'This action adds a new admin';
+    return this.prismaService.admin.create({ data: createAdminDto });
   }
 
-  findAll() {
-    return `This action returns all admin`;
+  async findAll({ page, limit }: { page: number; limit: number }) {
+    const total = await this.prismaService.car.count({
+      where: { deletedAt: null },
+    });
+
+    const data = await this.prismaService.car.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      where: { deletedAt: null },
+    });
+
+    return metaDataConvert({
+      data,
+      total,
+      limit,
+      page,
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} admin`;
+    return this.prismaService.admin.findUnique({ where: { id } });
   }
 
   update(id: number, updateAdminDto: UpdateAdminDto) {
-    return `This action updates a #${id} admin`;
+    return this.prismaService.admin.update({
+      where: { id },
+      data: updateAdminDto,
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} admin`;
+    return this.prismaService.admin.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
   }
 }
