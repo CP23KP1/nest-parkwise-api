@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  qa-parkwise-backend:
+    container_name: qa-parkwise-backend
+    image: cp23kp1/node-qa-parkwise-backend
+    build: .
+    restart: always
+    networks:
+      - backend
+
+networks:
+  backend:
+    external:
+      name: backend

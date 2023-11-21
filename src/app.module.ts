@@ -4,10 +4,11 @@ import { StaffModule } from './staff/staff.module';
 import { DeviceModule } from './device/device.module';
 import { ZoneModule } from './zone/zone.module';
 import { CarModule } from './car/car.module';
-import { UserModule } from './user/user.module';
 import { LogModule } from './log/log.module';
 import { LprModule } from './lpr/lpr.module';
 import { LicenseModule } from './license-plate/license-plate.module';
+import { AdminModule } from './admin/admin.module';
+import { CarbonModule } from './carbon/carbon.module';
 
 @Module({
   imports: [
@@ -16,10 +17,11 @@ import { LicenseModule } from './license-plate/license-plate.module';
     DeviceModule,
     ZoneModule,
     CarModule,
-    UserModule,
     LogModule,
     LprModule,
     LicenseModule
+    AdminModule,
+    CarbonModule,
   ],
   controllers: [],
   providers: [],

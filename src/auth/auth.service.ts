@@ -18,7 +18,7 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string) {
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.prismaService.admin.findUnique({
       where: { email },
     });
     if (!user) {
@@ -38,7 +38,7 @@ export class AuthService {
   async register(registerDto: RegisterDto) {
     try {
       const hashedPassword = await argon2.hash(registerDto.password);
-      const user = await this.prismaService.user.create({
+      const user = await this.prismaService.admin.create({
         data: {
           email: registerDto.email,
           firstname: registerDto.firstname,
