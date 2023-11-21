@@ -1,17 +1,13 @@
-model Zone {
-    @@map("zone")
+model Parking {
+    @@map("parking")
 
     id    Int     @id @default(autoincrement())
     name  String
     description String?
-    occupancy Int
-    maximumCapacity Int
-    address String?
-    latitude Float? 
-    longitude Float?
+    amount Int @default(0)
+    zone  Zone    @relation(fields: [zoneId], references: [id])
+    zoneId Int
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     deletedAt DateTime?
-    devices Device[]
-    parking Parking[]
 }

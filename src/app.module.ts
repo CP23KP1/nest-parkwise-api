@@ -9,6 +9,7 @@ import { LprModule } from './lpr/lpr.module';
 import { LicenseModule } from './license-plate/license-plate.module';
 import { AdminModule } from './admin/admin.module';
 import { CarbonModule } from './carbon/carbon.module';
+import { ParkingModule } from './parking/parking.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CarbonModule } from './carbon/carbon.module';
     LicenseModule,
     AdminModule,
     CarbonModule,
+    ParkingModule,
   ],
   controllers: [],
   providers: [],
