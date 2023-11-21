@@ -19,7 +19,7 @@ import { CarbonModule } from './carbon/carbon.module';
     CarModule,
     LogModule,
     LprModule,
-    LicenseModule
+    LicenseModule,
     AdminModule,
     CarbonModule,
   ],
