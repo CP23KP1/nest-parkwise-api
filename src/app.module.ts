@@ -8,6 +8,7 @@ import { LogModule } from './log/log.module';
 import { LprModule } from './lpr/lpr.module';
 import { AdminModule } from './admin/admin.module';
 import { CarbonModule } from './carbon/carbon.module';
+import { ParkingModule } from './parking/parking.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CarbonModule } from './carbon/carbon.module';
     LprModule,
     AdminModule,
     CarbonModule,
+    ParkingModule,
   ],
   controllers: [],
   providers: [],
