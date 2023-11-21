@@ -7,6 +7,7 @@ import { CarModule } from './car/car.module';
 import { UserModule } from './user/user.module';
 import { LogModule } from './log/log.module';
 import { LprModule } from './lpr/lpr.module';
+import { LicenseModule } from './license-plate/license-plate.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { LprModule } from './lpr/lpr.module';
     UserModule,
     LogModule,
     LprModule,
+    LicenseModule
   ],
   controllers: [],
   providers: [],
