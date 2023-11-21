@@ -1,8 +1,8 @@
 version: '3.7'
 services:
-  qa-parkwise-backend:
-    container_name: qa-parkwise-backend
-    image: cp23kp1/node-qa-parkwise-backend
+  qa-parkwise-api:
+    container_name: qa-parkwise-api
+    image: cp23kp1/node-qa-parkwise-api
     build: .
     restart: always
     networks:
