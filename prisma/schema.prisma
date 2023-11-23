@@ -1,6 +1,5 @@
 //🧩Don't Edit this file.✨Generated in Tue Nov 21 2023 18:32:58 GMT+0700 (Indochina Time)✨
 model Admin {
-
   id        Int       @id @default(autoincrement())
   email     String    @unique
   password  String?
@@ -23,7 +22,6 @@ datasource db {
 }
 
 model CarGuest {
-
   id           Int       @id @default(autoincrement())
   licensePlate String
   color        String
@@ -39,7 +37,6 @@ model CarGuest {
 }
 
 model Car {
-
   id           Int       @id @default(autoincrement())
   licensePlate String
   color        String
@@ -57,7 +54,6 @@ model Car {
 }
 
 model Device {
-
   id           Int       @id @default(autoincrement())
   name         String
   description  String?
@@ -74,7 +70,6 @@ model Device {
 }
 
 model Log {
-
   id         Int       @id @default(autoincrement())
   zoneId     Int
   zone       Zone      @relation(fields: [zoneId], references: [id])
@@ -108,7 +103,6 @@ model Parking {
 }
 
 model Staff {
-
   id          Int           @id @default(autoincrement())
   firstname   String
   lastname    String
@@ -134,7 +128,6 @@ enum StaffPosition {
 }
 
 model Zone {
-
   id              Int       @id @default(autoincrement())
   name            String
   description     String?
