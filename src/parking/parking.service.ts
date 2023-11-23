@@ -21,6 +21,21 @@ export class ParkingService {
       skip: (page - 1) * limit,
       take: limit,
       where: { deletedAt: null },
+      select: {
+        id: true,
+        zoneId: true,
+        createdAt: true,
+        deletedAt: true,
+        updatedAt: true,
+        description: true,
+        name: true,
+        amount: true,
+        zone: {
+          select: {
+            name: true,
+          },
+        },
+      }
     });
 
     return metaDataConvert({

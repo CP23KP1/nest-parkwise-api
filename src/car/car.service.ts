@@ -21,6 +21,24 @@ export class CarService {
       skip: (page - 1) * limit,
       take: limit,
       where: { deletedAt: null },
+      select:{
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
+        brand: true,
+        color: true,
+        model: true,
+        staffId: true,
+        year: true,
+        licensePlate: true,
+        staff: {
+          select: {
+            firstname: true,
+            lastname: true,
+          },
+        },
+      }
     });
 
     return metaDataConvert({

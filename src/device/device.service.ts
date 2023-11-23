@@ -23,6 +23,22 @@ export class DeviceService {
       skip: (page - 1) * limit,
       take: limit,
       where: { deletedAt: null },
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
+        zoneId: true,
+        name: true,
+        price: true,
+        brand: true,
+        description: true,
+        zone: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
 
     return metaDataConvert({
