@@ -13,13 +13,14 @@ export class AdminService {
   }
 
   async findAll({ page, limit }: { page: number; limit: number }) {
+    let limitInt = parseInt(limit.toString());
     const total = await this.prismaService.admin.count({
       where: { deletedAt: null },
     });
 
     const data = await this.prismaService.admin.findMany({
       skip: (page - 1) * limit,
-      take: limit,
+      take: limitInt,
       where: { deletedAt: null },
     });
 
