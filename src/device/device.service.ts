@@ -14,15 +14,47 @@ export class DeviceService {
     });
   }
 
-  async findAll({ page, limit }: { page: number; limit: number }) {
+  async findAll({
+    page,
+    limit,
+    search,
+    orderBy,
+    orderDirection,
+  }: {
+    page: number;
+    limit: number;
+    search?: string;
+    orderBy?: 'price' | 'createdAt';
+    orderDirection?: 'asc' | 'desc';
+  }) {
+    const whereCondition: any = {
+      deletedAt: null,
+    };
+
+    if (search) {
+      whereCondition.OR = [
+        { name: { contains: search } },
+        { brand: { contains: search } },
+        { description: { contains: search } },
+      ];
+    }
+
+    const orderCondition: Record<string, 'asc' | 'desc'> = {};
+
+    if (orderBy && orderDirection) {
+      const field = orderBy === 'createdAt' ? 'createdAt' : 'price';
+      orderCondition[field] = orderDirection;
+    }
+
     const total = await this.prismaService.device.count({
-      where: { deletedAt: null },
+      where: whereCondition,
     });
 
     const data = await this.prismaService.device.findMany({
       skip: (page - 1) * limit,
       take: limit,
-      where: { deletedAt: null },
+      where: whereCondition,
+      orderBy: orderCondition,
       select: {
         id: true,
         createdAt: true,

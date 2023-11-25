@@ -3,6 +3,7 @@ import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { PrismaService } from 'src/prisma.service';
 import { metaDataConvert } from 'src/utils/converter.util';
+import { equal } from 'assert';
 
 @Injectable()
 export class CarService {
@@ -12,16 +13,59 @@ export class CarService {
     return this.prismaService.car.create({ data: createCarDto });
   }
 
-  async findAll({ page, limit }: { page: number; limit: number }) {
+  async findAll({
+    page,
+    limit,
+    search,
+    orderBy,
+    orderDirection,
+  }: {
+    page: number;
+    limit: number;
+    search?: string;
+    orderBy?: 'createdAt';
+    orderDirection?: 'asc' | 'desc';
+  }) {
+    const whereCondition: any = {
+      deletedAt: null,
+    };
+
+    if (search) {
+      whereCondition.OR = [
+        { brand: { contains: search } },
+        { color: { contains: search } },
+        { model: { contains: search } },
+        { year: { equals: parseInt(search) || undefined } },
+        { licensePlate: { contains: search } },
+        {
+          staff: {
+            firstname: { contains: search },
+          },
+        },
+        {
+          staff: {
+            lastname: { contains: search },
+          },
+        },
+      ];
+    }
+
+    const orderCondition: Record<string, 'asc' | 'desc'> = {};
+
+    if (orderBy && orderDirection) {
+      orderCondition[orderBy] = orderDirection;
+    }
+
     const total = await this.prismaService.car.count({
-      where: { deletedAt: null },
+      where: whereCondition,
     });
 
     const data = await this.prismaService.car.findMany({
       skip: (page - 1) * limit,
       take: limit,
-      where: { deletedAt: null },
-      select:{
+      where: whereCondition,
+      orderBy: orderCondition,
+      select: {
         id: true,
         createdAt: true,
         updatedAt: true,
@@ -38,7 +82,7 @@ export class CarService {
             lastname: true,
           },
         },
-      }
+      },
     });
 
     return metaDataConvert({
