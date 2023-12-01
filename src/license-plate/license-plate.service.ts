@@ -17,6 +17,7 @@ export class LicensePlateService {
     console.log('เข้ามาจ้าาา', licensePlateDto);
     let carId = 0;
     let staffId = 0;
+    let zoneId = licensePlateDto.zoneId;
 
     try {
       const result = await this.prismaService.car.findFirst({
@@ -41,7 +42,7 @@ export class LicensePlateService {
         data: {
           carId: carId,
           staffId: staffId,
-          zoneId: 1,
+          zoneId: zoneId,
         },
       });
 
