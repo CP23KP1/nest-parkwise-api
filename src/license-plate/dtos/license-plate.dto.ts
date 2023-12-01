@@ -22,4 +22,13 @@ export class InputLicensePlateDto {
   @IsNotEmpty()
   licensePlateUrl: string;
 
+  @ApiProperty({
+    type: Number,
+    required: true,
+    description: 'The is zoneID',
+    example: 1,
+  })
+  @IsString()
+  @IsNotEmpty()
+  zoneId: number;
 }
