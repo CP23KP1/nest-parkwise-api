@@ -28,7 +28,7 @@ export class InputLicensePlateDto {
     description: 'The is zoneID',
     example: 1,
   })
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   zoneId: number;
 }
