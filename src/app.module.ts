@@ -10,6 +10,7 @@ import { LicenseModule } from './license-plate/license-plate.module';
 import { AdminModule } from './admin/admin.module';
 import { CarbonModule } from './carbon/carbon.module';
 import { ParkingModule } from './parking/parking.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ParkingModule } from './parking/parking.module';
     AdminModule,
     CarbonModule,
     ParkingModule,
+    UploadModule
   ],
   controllers: [],
   providers: [],

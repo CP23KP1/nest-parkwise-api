@@ -14,4 +14,9 @@ export class LicensePlateController {
     create(@Body() inputLicensePlateDto: InputLicensePlateDto) {
       return this.licensePlateService.test(inputLicensePlateDto);
     }
+
+    @Get()
+    findAll() {
+      return this.licensePlateService.get();
+    }
 }

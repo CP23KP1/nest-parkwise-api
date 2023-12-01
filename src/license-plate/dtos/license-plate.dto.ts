@@ -11,4 +11,15 @@ export class InputLicensePlateDto {
   @IsString()
   @IsNotEmpty()
   licensePlate: string;
+
+  @ApiProperty({
+    type: String,
+    required: true,
+    description: 'The is the license plate url that uploaded on S3',
+    example: 'https://aws-parkwise-api.s3.ap-southeast-1.amazonaws.com/xxx.jpg',
+  })
+  @IsString()
+  @IsNotEmpty()
+  licensePlateUrl: string;
+
 }
