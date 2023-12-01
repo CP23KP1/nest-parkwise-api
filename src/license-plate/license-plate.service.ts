@@ -42,7 +42,7 @@ export class LicensePlateService {
         data: {
           carId: carId,
           staffId: staffId,
-          zoneId: zoneId,
+          zoneId: Number(zoneId),
         },
       });
 
