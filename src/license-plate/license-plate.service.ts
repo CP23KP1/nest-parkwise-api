@@ -42,21 +42,11 @@ export class LicensePlateService {
         data: {
           carId: carId,
           staffId: staffId,
-          zoneId: Number(zoneId) as never,
+          zoneId: Number(zoneId),
         },
       });
 
       console.log('this is created logs jaa ', logs);
-      const input = {
-        Body: 'HappyFace.jpg',
-        Bucket: 'parkwise-api',
-        Key: 'HappyFace.jpg',
-      };
-      const command = new PutObjectCommand(input);
-      const response = await client
-        .send(command)
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
     } catch (error) {
       console.log('error creating logs', error);
     }

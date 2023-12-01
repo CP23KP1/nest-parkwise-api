@@ -79,7 +79,7 @@ model Log {
   car        Car?      @relation(fields: [carId], references: [id])
   carGuestId Int?
   carGuest   CarGuest? @relation(fields: [carGuestId], references: [id])
-  licenseUrl String
+  licenseUrl String?    @default("")
   timestamp  DateTime  @default(now())
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
