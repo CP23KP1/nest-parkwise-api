@@ -38,9 +38,15 @@ export class StaffController {
   @ApiOperation({ summary: '(Staff) Get all staff' })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
+  @ApiQuery({ name: 'search', required: false, type: Number, example: 'John' })
   @UseGuards(JwtAuthGuard)
-  findAll(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
-    return this.staffService.findAll({ page, limit });
+  findAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('search') search = '',
+    @Query('status') status: 'all' | 'active' | 'inactive' = 'inactive',
+  ) {
+    return this.staffService.findAll({ page, limit, search, status });
   }
 
   @Get(':id')

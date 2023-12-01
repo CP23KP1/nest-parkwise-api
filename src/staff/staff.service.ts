@@ -9,18 +9,60 @@ export class StaffService {
   constructor(private readonly prismaService: PrismaService) {}
 
   create(createStaffDto: CreateStaffDto) {
+    createStaffDto.status = false;
     return this.prismaService.staff.create({
       data: createStaffDto,
     });
   }
 
-  async findAll({ page, limit }: { page?: number; limit?: number }) {
-    const total = await this.prismaService.staff.count();
+  async findAll({
+    page = 1,
+    limit = 10,
+    search,
+    status,
+  }: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: 'all' | 'active' | 'inactive';
+  } = {}) {
+    const whereCondition: any = {
+      OR: [
+        { firstname: { contains: search } },
+        { lastname: { contains: search } },
+        { email: { contains: search } },
+        { phoneNumber: { contains: search } },
+      ],
+    };
+
+    if (search) {
+      whereCondition.deletedAt = null;
+    }
+
+    const total = await this.getCountWithStatus(whereCondition, status);
+
     const data = await this.prismaService.staff.findMany({
       take: limit,
       skip: (page - 1) * limit,
+      where: whereCondition,
     });
+
     return metaDataConvert({ data, total, page, limit });
+  }
+
+  private async getCountWithStatus(
+    whereCondition: any,
+    status?: 'all' | 'active' | 'inactive',
+  ) {
+    if (status === 'active') {
+      whereCondition.status = true;
+    } else if (status === 'inactive') {
+      whereCondition.status = false;
+    }
+
+    return this.prismaService.staff.count({
+      where: whereCondition,
+    });
   }
 
   findOne(id: number) {
@@ -36,10 +78,14 @@ export class StaffService {
     });
   }
 
-  remove(id: number) {
-    return this.prismaService.staff.update({
-      where: { id },
-      data: { deletedAt: new Date() },
+  async remove(id: number) {
+    await this.prismaService.car.deleteMany({
+      where: {
+        staffId: id,
+      }
+    })
+    return this.prismaService.staff.delete({
+      where: { id: id },
     });
   }
 }

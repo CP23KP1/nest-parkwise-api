@@ -1,6 +1,5 @@
-//🧩Don't Edit this file.✨Generated in Thu Nov 16 2023 13:05:24 GMT+0700 (Indochina Time)✨
+//🧩Don't Edit this file.✨Generated in Tue Nov 21 2023 18:32:58 GMT+0700 (Indochina Time)✨
 model Admin {
-
   id        Int       @id @default(autoincrement())
   email     String    @unique
   password  String?
@@ -23,7 +22,6 @@ datasource db {
 }
 
 model CarGuest {
-
   id           Int       @id @default(autoincrement())
   licensePlate String
   color        String
@@ -39,7 +37,6 @@ model CarGuest {
 }
 
 model Car {
-
   id           Int       @id @default(autoincrement())
   licensePlate String
   color        String
@@ -57,7 +54,6 @@ model Car {
 }
 
 model Device {
-
   id           Int       @id @default(autoincrement())
   name         String
   description  String?
@@ -74,7 +70,6 @@ model Device {
 }
 
 model Log {
-
   id         Int       @id @default(autoincrement())
   zoneId     Int
   zone       Zone      @relation(fields: [zoneId], references: [id])
@@ -92,14 +87,28 @@ model Log {
   @@map("log")
 }
 
-model Staff {
+model Parking {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  amount      Int       @default(0)
+  zone        Zone      @relation(fields: [zoneId], references: [id])
+  zoneId      Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 
+  @@map("parking")
+}
+
+model Staff {
   id          Int           @id @default(autoincrement())
   firstname   String
   lastname    String
   email       String
   phoneNumber String
   position    StaffPosition @default(Other)
+  status      Boolean       @default(false)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   deletedAt   DateTime?
@@ -119,7 +128,6 @@ enum StaffPosition {
 }
 
 model Zone {
-
   id              Int       @id @default(autoincrement())
   name            String
   description     String?
@@ -132,6 +140,7 @@ model Zone {
   updatedAt       DateTime  @updatedAt
   deletedAt       DateTime?
   devices         Device[]
+  parking         Parking[]
   Log             Log[]
 
   @@map("zone")

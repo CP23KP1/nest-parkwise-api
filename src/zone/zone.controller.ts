@@ -45,8 +45,20 @@ export class ZoneController {
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
   @UseGuards(JwtAuthGuard)
-  findAll(@Query('page') page = 1, @Query('limit') limit = 10) {
-    return this.zoneService.findAll({ page: +page, limit: +limit });
+  findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('search') search?: string,
+    @Query('orderBy') orderBy?: 'maximumCapacity' | 'occupancy' | 'createdAt',
+    @Query('orderDirection') orderDirection?: 'asc' | 'desc',
+  ) {
+    return this.zoneService.findAll({
+      page: +page,
+      limit: +limit,
+      search,
+      orderBy,
+      orderDirection,
+    });
   }
 
   @Get(':id')

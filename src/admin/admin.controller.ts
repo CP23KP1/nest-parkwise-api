@@ -51,8 +51,20 @@ export class AdminController {
     description: 'The limit of the page',
   })
   @UseGuards(JwtAuthGuard)
-  findAll(@Query('page') page = 1, @Query('limit') limit = 10) {
-    return this.adminService.findAll({ page, limit });
+  findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('search') search?: string,
+    @Query('orderBy') orderBy?: 'createdAt',
+    @Query('orderDirection') orderDirection?: 'asc' | 'desc',
+  ) {
+    return this.adminService.findAll({
+      page,
+      limit,
+      search,
+      orderBy,
+      orderDirection,
+    });
   }
 
   @Get(':id')
