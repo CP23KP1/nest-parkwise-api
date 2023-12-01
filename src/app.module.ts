@@ -8,6 +8,7 @@ import { LogModule } from './log/log.module';
 import { LprModule } from './lpr/lpr.module';
 import { AdminModule } from './admin/admin.module';
 import { CarbonModule } from './carbon/carbon.module';
+import { LineService } from './line/line.service';
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import { CarbonModule } from './carbon/carbon.module';
     CarbonModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [LineService],
 })
 export class AppModule {}
