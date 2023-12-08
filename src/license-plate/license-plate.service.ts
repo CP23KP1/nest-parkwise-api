@@ -14,7 +14,6 @@ export class LicensePlateService {
   constructor(private prismaService: PrismaService) {}
 
   async test(licensePlateDto: InputLicensePlateDto) {
-    console.log('เข้ามาจ้าาา', licensePlateDto);
     let carId = 0;
     let staffId = 0;
     let zoneId = licensePlateDto.zoneId;
@@ -29,10 +28,8 @@ export class LicensePlateService {
         },
       });
 
-      console.log('result', result);
       carId = result.id;
       staffId = result.staff.id;
-      console.log('this is car jaa ', result);
     } catch (error) {
       console.log('error', error);
     }
@@ -43,6 +40,7 @@ export class LicensePlateService {
           carId: carId,
           staffId: staffId,
           zoneId: Number(zoneId),
+          licenseUrl: licensePlateDto.licensePlateUrl,
         },
       });
 
@@ -52,20 +50,75 @@ export class LicensePlateService {
     }
   }
 
-  async get() {
+  async get({
+    page = 1,
+    limit = 10,
+    search,
+    zoneId,
+  }: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    zoneId?: number;
+  } = {}) {
     try {
-      const result = await this.prismaService.log.findMany({
-        include: {
-          staff: true,
-          car: true,
-          zone: true,
-        },
-      });
+      const whereCondition: any = {};
 
-      console.log('result', result);
-      return result;
+      if (search) {
+        console.log('search', search);
+        const searchLower = search.toLowerCase();
+        whereCondition.OR = [
+          { car: { licensePlate: { contains: searchLower } } },
+          { staff: { firstname: { contains: searchLower } } },
+          { staff: { lastname: { contains: searchLower } } },
+        ];
+      }
+
+      if (zoneId) {
+        whereCondition.zoneId = zoneId;
+      }
+
+      const [data, total] = await Promise.all([
+        this.prismaService.log.findMany({
+          take: limit,
+          skip: (page - 1) * limit,
+          where: whereCondition,
+          include: {
+            staff: true,
+            car: true,
+            zone: true,
+          },
+          orderBy: {
+            createdAt: 'desc'
+          },
+        }),
+        this.prismaService.log.count({
+          where: whereCondition,
+        }),
+      ]);
+
+      const totalPages = Math.ceil(total / limit);
+
+      return {
+        data,
+        meta: {
+          total,
+          page,
+          limit,
+          totalPages,
+        },
+      };
     } catch (error) {
       console.log('error', error);
+      return {
+        data: [],
+        meta: {
+          total: 0,
+          page,
+          limit,
+          totalPages: 0,
+        },
+      };
     }
   }
 }
