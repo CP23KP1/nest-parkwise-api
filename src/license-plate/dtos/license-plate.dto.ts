@@ -30,5 +30,6 @@ export class InputLicensePlateDto {
   })
   @IsNumber()
   @IsNotEmpty()
+  
   zoneId: number;
 }
