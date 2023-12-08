@@ -39,8 +39,20 @@ export class DeviceController {
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'limit', required: false })
   @UseGuards(JwtAuthGuard)
-  findAll(@Query('page') page = 1, @Query('limit') limit = 10) {
-    return this.deviceService.findAll({ page: +page, limit: +limit });
+  findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('search') search?: string,
+    @Query('orderBy') orderBy?: 'price' | 'createdAt',
+    @Query('orderDirection') orderDirection?: 'asc' | 'desc',
+  ) {
+    return this.deviceService.findAll({
+      page: +page,
+      limit: +limit,
+      search,
+      orderBy,
+      orderDirection,
+    });
   }
 
   @Get(':id')

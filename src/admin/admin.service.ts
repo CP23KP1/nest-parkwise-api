@@ -12,15 +12,47 @@ export class AdminService {
     return this.prismaService.admin.create({ data: createAdminDto });
   }
 
-  async findAll({ page, limit }: { page: number; limit: number }) {
-    const total = await this.prismaService.car.count({
-      where: { deletedAt: null },
+  async findAll({
+    page,
+    limit,
+    search,
+    orderBy,
+    orderDirection,
+  }: {
+    page: number;
+    limit: number;
+    search?: string;
+    orderBy?: 'createdAt';
+    orderDirection?: 'asc' | 'desc';
+  }) {
+    const whereCondition: any = {
+      deletedAt: null,
+    };
+
+    if (search) {
+      whereCondition.OR = [
+        { firstname: { contains: search } }, 
+        { lastname: { contains: search } }, 
+        { email: { contains: search } }, 
+      ];
+    }
+
+    const orderCondition: Record<string, 'asc' | 'desc'> = {};
+
+    if (orderBy && orderDirection) {
+      const field = orderBy === 'createdAt' ? 'createdAt' : '';
+      orderCondition[field] = orderDirection;
+    }
+
+    const total = await this.prismaService.admin.count({
+      where: whereCondition,
     });
 
-    const data = await this.prismaService.car.findMany({
+    const data = await this.prismaService.admin.findMany({
       skip: (page - 1) * limit,
-      take: limit,
-      where: { deletedAt: null },
+      take: parseInt(limit.toString()),
+      where: whereCondition,
+      orderBy: orderCondition,
     });
 
     return metaDataConvert({

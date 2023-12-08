@@ -3,6 +3,15 @@ services:
   qa-parkwise-api:
     container_name: qa-parkwise-api
     image: cp23kp1/node-qa-parkwise-api
+    build:
+      context: .
+      dockerfile: Dockerfile-qa
+    restart: always
+    networks:
+      - backend
+  parkwise-api:
+    container_name: parkwise-api
+    image: cp23kp1/node-parkwise-api
     build: .
     restart: always
     networks:

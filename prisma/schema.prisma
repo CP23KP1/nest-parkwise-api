@@ -1,4 +1,4 @@
-//🧩Don't Edit this file.✨Generated in Thu Nov 16 2023 13:05:24 GMT+0700 (Indochina Time)✨
+//🧩Don't Edit this file.✨Generated in Fri Dec 08 2023 21:21:35 GMT+0700 (Indochina Time)✨
 model Admin {
 
   id        Int       @id @default(autoincrement())
@@ -92,6 +92,21 @@ model Log {
   @@map("log")
 }
 
+model Parking {
+
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  amount      Int       @default(0)
+  zone        Zone      @relation(fields: [zoneId], references: [id])
+  zoneId      Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@map("parking")
+}
+
 model Staff {
 
   id          Int           @id @default(autoincrement())
@@ -132,6 +147,7 @@ model Zone {
   updatedAt       DateTime  @updatedAt
   deletedAt       DateTime?
   devices         Device[]
+  parking         Parking[]
   Log             Log[]
 
   @@map("zone")

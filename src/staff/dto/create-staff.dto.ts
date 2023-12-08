@@ -37,4 +37,11 @@ export class CreateStaffDto {
   @IsString()
   @IsNotEmpty()
   phoneNumber: string;
+
+  @ApiProperty({
+    description: 'Status of using system',
+    type: Boolean,
+    example: true,
+  })
+  status: boolean;
 }

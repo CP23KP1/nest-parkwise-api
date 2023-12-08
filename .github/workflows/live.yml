@@ -1,0 +1,26 @@
+name: LIVE (Production)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  LIVE:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@master
+        with:
+          path: 'parkwise-api/'
+
+      - name: Setup env 🛠
+        env:
+          PROD_ENV: ${{ secrets.PROD_ENV }}
+        run: |
+          touch parkwise-api/.env
+          echo "$PROD_ENV" >> parkwise-api/.env
+
+      - name: Docker compose 🐳
+        run: docker-compose -f parkwise-api/docker-compose.yml up -d --build parkwise-api
