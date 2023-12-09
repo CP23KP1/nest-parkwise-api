@@ -8,7 +8,6 @@ import { LogModule } from './log/log.module';
 import { LprModule } from './lpr/lpr.module';
 import { LicenseModule } from './license-plate/license-plate.module';
 import { AdminModule } from './admin/admin.module';
-import { CarbonModule } from './carbon/carbon.module';
 import { LineService } from './line/line.service';
 import { ParkingModule } from './parking/parking.module';
 import { UploadModule } from './upload/upload.module';
@@ -27,7 +26,6 @@ import { ConfigModule } from '@nestjs/config';
     LprModule,
     LicenseModule,
     AdminModule,
-    CarbonModule,
     ParkingModule,
     UploadModule,
     LineModule,
