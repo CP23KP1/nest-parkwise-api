@@ -19,7 +19,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "dos2unix-pm": "dos2unix ./node_modules/prisma-multischema/bin/run",
-    "ms-prisma": "prisma-multischema"
+    "ms-prisma": "yarn dos2unix-pm && prisma-multischema"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.458.0",
