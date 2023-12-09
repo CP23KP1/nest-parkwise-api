@@ -1,14 +1,11 @@
-export const metaDataConvert = ({
+import { PageMeta } from 'shared/types/page-meta.type';
+
+export const metaDataConvert = <Type>({
   data,
   total,
   page,
   limit,
-}: {
-  data: any;
-  total: number;
-  page: number;
-  limit: number;
-}) => {
+}: PageMeta<Type>) => {
   return {
     data: data,
     meta: {
