@@ -10,6 +10,8 @@ RUN yarn
 
 COPY . /usr/src/app/
 
+RUN npx prisma generate
+
 RUN yarn build
 
 EXPOSE 8080
