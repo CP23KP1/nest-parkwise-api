@@ -1,4 +1,4 @@
-//🧩Don't Edit this file.✨Generated in Fri Dec 08 2023 21:21:35 GMT+0700 (Indochina Time)✨
+//🧩Don't Edit this file.✨Generated in Sat Dec 09 2023 22:48:55 GMT+0700 (GMT+07:00)✨
 model Admin {
 
   id        Int       @id @default(autoincrement())
@@ -84,7 +84,6 @@ model Log {
   car        Car?      @relation(fields: [carId], references: [id])
   carGuestId Int?
   carGuest   CarGuest? @relation(fields: [carGuestId], references: [id])
-  licenseUrl String?   @default("") @db.VarChar(300)
   timestamp  DateTime  @default(now())
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
@@ -116,6 +115,7 @@ model Staff {
   email       String
   phoneNumber String
   position    StaffPosition @default(Other)
+  staff       Boolean       @default(false)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   deletedAt   DateTime?
