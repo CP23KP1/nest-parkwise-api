@@ -13,6 +13,7 @@ import { ParkingService } from './parking.service';
 import { CreateParkingDto } from './dto/create-parking.dto';
 import { UpdateParkingDto } from './dto/update-parking.dto';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -30,6 +31,7 @@ export class ParkingController {
   @ApiOperation({ summary: '(Parking) Create parking' })
   @ApiBody({ type: CreateParkingDto })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   create(@Body() createParkingDto: CreateParkingDto) {
     return this.parkingService.create(createParkingDto);
   }
@@ -40,6 +42,7 @@ export class ParkingController {
   @ApiQuery({ name: 'limit', required: false, example: 10 })
   @ApiQuery({ name: 'search', required: false, example: 'ที่จอดรถพิเศษ' })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   findAll(
     @Query('page') page = 1,
     @Query('limit') limit = 10,
@@ -60,6 +63,7 @@ export class ParkingController {
   @ApiOperation({ summary: '(Parking) Get parking by id' })
   @ApiParam({ name: 'id', required: true, example: 1 })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   findOne(@Param('id') id: string) {
     return this.parkingService.findOne(+id);
   }
@@ -69,6 +73,7 @@ export class ParkingController {
   @ApiParam({ name: 'id', required: true, example: 1 })
   @ApiBody({ type: UpdateParkingDto })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateParkingDto: UpdateParkingDto) {
     return this.parkingService.update(+id, updateParkingDto);
   }
@@ -77,6 +82,7 @@ export class ParkingController {
   @ApiOperation({ summary: '(Parking) Delete parking by id' })
   @ApiParam({ name: 'id', required: true, example: 1 })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   remove(@Param('id') id: string) {
     return this.parkingService.remove(+id);
   }

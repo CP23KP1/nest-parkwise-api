@@ -35,6 +35,7 @@ async function bootstrap() {
     .setDescription('The Parkwise API description')
     .setVersion('1.0')
     .addTag('parkwise')
+    .addBearerAuth({ in: 'header', type: 'http' })
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

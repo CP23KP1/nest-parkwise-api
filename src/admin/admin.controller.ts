@@ -13,6 +13,7 @@ import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -30,6 +31,7 @@ export class AdminController {
   @ApiOperation({ summary: '(Admin) Create exsting admin' })
   @ApiBody({ type: CreateAdminDto })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   create(@Body() createAdminDto: CreateAdminDto) {
     return this.adminService.create(createAdminDto);
   }
@@ -51,6 +53,7 @@ export class AdminController {
     description: 'The limit of the page',
   })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   findAll(
     @Query('page') page = 1,
     @Query('limit') limit = 10,
@@ -71,6 +74,7 @@ export class AdminController {
   @ApiOperation({ summary: '(Admin) Get by admin id' })
   @ApiParam({ name: 'id', required: true, example: 1, type: 'number' })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   findOne(@Param('id') id: string) {
     return this.adminService.findOne(+id);
   }
@@ -80,6 +84,7 @@ export class AdminController {
   @ApiParam({ name: 'id', required: true, example: 1, type: 'number' })
   @ApiBody({ type: UpdateAdminDto })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto) {
     return this.adminService.update(+id, updateAdminDto);
   }
@@ -87,6 +92,7 @@ export class AdminController {
   @Delete(':id')
   @ApiOperation({ summary: '(Admin) Remove by admin id' })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   remove(@Param('id') id: string) {
     return this.adminService.remove(+id);
   }

@@ -13,6 +13,7 @@ import { ZoneService } from './zone.service';
 import { CreateZoneDto } from './dto/create-zone.dto';
 import { UpdateZoneDto } from './dto/update-zone.dto';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOkResponse,
   ApiOperation,
@@ -36,6 +37,7 @@ export class ZoneController {
     type: CreateZoneResponse,
   })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   create(@Body() createZoneDto: CreateZoneDto) {
     return this.zoneService.create(createZoneDto);
   }
@@ -45,6 +47,7 @@ export class ZoneController {
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   findAll(
     @Query('page') page = 1,
     @Query('limit') limit = 10,
@@ -65,6 +68,7 @@ export class ZoneController {
   @ApiOperation({ summary: '(Zone) Get a zone by id' })
   @ApiParam({ name: 'id', required: true, type: Number, example: 1 })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   findOne(@Param('id') id: string) {
     return this.zoneService.findOne(+id);
   }
@@ -74,11 +78,14 @@ export class ZoneController {
   @ApiParam({ name: 'id', required: true, type: Number, example: 1 })
   @ApiBody({ type: UpdateZoneDto })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateZoneDto: UpdateZoneDto) {
     return this.zoneService.update(+id, updateZoneDto);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   remove(@Param('id') id: string) {
     return this.zoneService.remove(+id);
   }

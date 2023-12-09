@@ -9,7 +9,13 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { RegisterResponse } from './dto/response/register.response';
 import { LoginResponse } from './dto/response/login.response';
 import JwtAuthGuard from './jwt/jwt-auth.guard';
@@ -64,6 +70,7 @@ export class AuthController {
     type: RegisterResponse,
   })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   me(@Request() req: AuthUserRequest) {
     return req.user;
   }

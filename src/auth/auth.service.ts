@@ -49,7 +49,6 @@ export class AuthService {
       delete user.password;
       return user;
     } catch (error) {
-      console.log(error);
       throw new ForbiddenException('An account with this email already exists');
     }
   }

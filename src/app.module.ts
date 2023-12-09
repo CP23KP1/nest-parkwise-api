@@ -12,9 +12,12 @@ import { CarbonModule } from './carbon/carbon.module';
 import { LineService } from './line/line.service';
 import { ParkingModule } from './parking/parking.module';
 import { UploadModule } from './upload/upload.module';
+import { LineModule } from './line/line.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({}),
     AuthModule,
     StaffModule,
     DeviceModule,
@@ -27,6 +30,7 @@ import { UploadModule } from './upload/upload.module';
     CarbonModule,
     ParkingModule,
     UploadModule,
+    LineModule,
   ],
   controllers: [],
   providers: [LineService],

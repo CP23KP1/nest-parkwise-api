@@ -13,6 +13,7 @@ import { StaffService } from './staff.service';
 import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -30,6 +31,7 @@ export class StaffController {
   @ApiOperation({ summary: '(Staff) Create a new staff' })
   @ApiBody({ type: CreateStaffDto })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   create(@Body() createStaffDto: CreateStaffDto) {
     return this.staffService.create(createStaffDto);
   }
@@ -40,6 +42,7 @@ export class StaffController {
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
   @ApiQuery({ name: 'search', required: false, type: Number, example: 'John' })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   findAll(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
@@ -53,6 +56,7 @@ export class StaffController {
   @ApiOperation({ summary: '(Staff) Get a staff by id' })
   @ApiParam({ name: 'id', required: true, type: Number, example: 1 })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   findOne(@Param('id') id: string) {
     return this.staffService.findOne(+id);
   }
@@ -62,6 +66,7 @@ export class StaffController {
   @ApiParam({ name: 'id', required: true, type: Number, example: 1 })
   @ApiBody({ type: UpdateStaffDto })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateStaffDto: UpdateStaffDto) {
     return this.staffService.update(+id, updateStaffDto);
   }
@@ -69,6 +74,7 @@ export class StaffController {
   @Delete(':id')
   @ApiOperation({ summary: '(Staff) Delete a staff by id' })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   remove(@Param('id') id: string) {
     return this.staffService.remove(+id);
   }

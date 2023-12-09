@@ -13,6 +13,7 @@ import { CarService } from './car.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
@@ -30,6 +31,7 @@ export class CarController {
   @ApiOperation({ summary: '(Car) Create new car' })
   @ApiBody({ type: CreateCarDto })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   create(@Body() createCarDto: CreateCarDto) {
     return this.carService.create(createCarDto);
   }
@@ -51,6 +53,7 @@ export class CarController {
     description: 'The limit of the page',
   })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   findAll(
     @Query('page') page = 1,
     @Query('limit') limit = 10,
@@ -75,6 +78,7 @@ export class CarController {
     description: 'The car id',
   })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   findOne(@Param('id') id: string) {
     return this.carService.findOne(+id);
   }
@@ -88,11 +92,20 @@ export class CarController {
   })
   @ApiBody({ type: UpdateCarDto })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateCarDto: UpdateCarDto) {
     return this.carService.update(+id, updateCarDto);
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: '(Car) Delete by car id' })
+  @ApiParam({
+    type: 'string',
+    name: 'id',
+    description: 'The car id',
+  })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   remove(@Param('id') id: string) {
     return this.carService.remove(+id);
   }
