@@ -8,9 +8,7 @@ COPY package.json yarn.lock /usr/src/app/
 
 RUN yarn
 
-COPY . .
-
-RUN npx prisma generate
+COPY . /usr/src/app/
 
 RUN yarn build
 
