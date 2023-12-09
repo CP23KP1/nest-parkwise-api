@@ -40,7 +40,10 @@ export class AuthController {
 
   @Post('/register')
   @ApiBody({ type: RegisterDto })
-  @ApiOperation({ summary: 'Register a new user' })
+  @ApiOperation({
+    summary: 'Register a new user',
+    responses: { 201: { description: 'User registered successfully' } },
+  })
   @ApiOkResponse({
     description: 'User registered successfully',
     type: RegisterResponse,
@@ -51,7 +54,16 @@ export class AuthController {
 
   @Get('/refresh')
   @ApiOperation({ summary: 'Refresh the current user token' })
-  @ApiOkResponse({})
+  @ApiOkResponse({
+    description: 'Return a new access token',
+    schema: {
+      properties: {
+        access_token: {
+          type: 'string',
+        },
+      },
+    },
+  })
   @UseGuards(JwtRefreshGuard)
   async refreshToken(@Request() req: AuthUserRequest) {
     const { access_token } = this.authService.signToken(
