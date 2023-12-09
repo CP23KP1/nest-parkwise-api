@@ -22,7 +22,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import JwtAuthGuard from 'src/auth/jwt/jwt-auth.guard';
-import { Staff } from '@prisma/client';
 import { ApiOkResponsePaginated } from 'shared/decorators/api-ok-response-paginated.decorator';
 
 @Controller('staffs')
