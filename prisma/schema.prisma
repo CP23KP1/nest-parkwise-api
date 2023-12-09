@@ -1,4 +1,4 @@
-//🧩Don't Edit this file.✨Generated in Sat Dec 09 2023 22:48:55 GMT+0700 (GMT+07:00)✨
+//🧩Don't Edit this file.✨Generated in Sat Dec 09 2023 22:50:14 GMT+0700 (GMT+07:00)✨
 model Admin {
 
   id        Int       @id @default(autoincrement())
@@ -115,7 +115,7 @@ model Staff {
   email       String
   phoneNumber String
   position    StaffPosition @default(Other)
-  staff       Boolean       @default(false)
+  status      Boolean       @default(false)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   deletedAt   DateTime?

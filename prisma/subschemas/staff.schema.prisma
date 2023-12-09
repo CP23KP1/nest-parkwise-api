@@ -7,7 +7,7 @@ model Staff {
     email String
     phoneNumber String
     position StaffPosition @default(Other)
-    staff Boolean @default(false)
+    status Boolean @default(false)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     deletedAt DateTime?
