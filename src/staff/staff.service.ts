@@ -79,11 +79,6 @@ export class StaffService {
   }
 
   async remove(id: number) {
-    await this.prismaService.car.deleteMany({
-      where: {
-        staffId: id,
-      }
-    })
     return this.prismaService.staff.delete({
       where: { id: id },
     });

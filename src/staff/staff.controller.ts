@@ -15,12 +15,15 @@ import { UpdateStaffDto } from './dto/update-staff.dto';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import JwtAuthGuard from 'src/auth/jwt/jwt-auth.guard';
+import { Staff } from '@prisma/client';
+import { ApiOkResponsePaginated } from 'shared/decorators/api-ok-response-paginated.decorator';
 
 @Controller('staffs')
 @ApiTags('Staffs')
@@ -30,6 +33,11 @@ export class StaffController {
   @Post()
   @ApiOperation({ summary: '(Staff) Create a new staff' })
   @ApiBody({ type: CreateStaffDto })
+  @ApiOkResponse({
+    status: 201,
+    description: 'Return the created staff',
+    type: CreateStaffDto,
+  })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   create(@Body() createStaffDto: CreateStaffDto) {
@@ -42,6 +50,9 @@ export class StaffController {
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
   @ApiQuery({ name: 'search', required: false, type: Number, example: 'John' })
   @UseGuards(JwtAuthGuard)
+  @ApiOkResponsePaginated(CreateStaffDto, {
+    description: 'Return all staff',
+  })
   @ApiBearerAuth()
   findAll(
     @Query('page') page: number = 1,
@@ -55,6 +66,10 @@ export class StaffController {
   @Get(':id')
   @ApiOperation({ summary: '(Staff) Get a staff by id' })
   @ApiParam({ name: 'id', required: true, type: Number, example: 1 })
+  @ApiOkResponse({
+    description: 'Return the staff',
+    type: CreateStaffDto,
+  })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   findOne(@Param('id') id: string) {
@@ -64,7 +79,14 @@ export class StaffController {
   @Patch(':id')
   @ApiOperation({ summary: '(Staff) Update a staff by id' })
   @ApiParam({ name: 'id', required: true, type: Number, example: 1 })
-  @ApiBody({ type: UpdateStaffDto })
+  @ApiBody({
+    type: CreateStaffDto,
+    description: 'Update staff (Put only content you want to update)',
+  })
+  @ApiOkResponse({
+    description: 'Return the updated staff',
+    type: CreateStaffDto,
+  })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateStaffDto: UpdateStaffDto) {
@@ -73,9 +95,14 @@ export class StaffController {
 
   @Delete(':id')
   @ApiOperation({ summary: '(Staff) Delete a staff by id' })
+  @ApiParam({ name: 'id', required: true, type: Number, example: 1 })
+  @ApiOkResponse({
+    description: 'Return the deleted staff',
+    type: CreateStaffDto,
+  })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.staffService.remove(+id);
   }
 }
