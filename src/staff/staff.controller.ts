@@ -22,7 +22,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import JwtAuthGuard from 'src/auth/jwt/jwt-auth.guard';
-import { ApiOkResponsePaginated } from 'shared/decorators/api-ok-response-paginated.decorator';
+import { ApiOkResponsePaginated } from 'src/shared/decorators/api-ok-response-paginated.decorator';
 
 @Controller('staffs')
 @ApiTags('Staffs')

@@ -5,7 +5,7 @@ import {
   ApiResponseOptions,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { ResponsePageMeta } from 'shared/types/page-meta.type';
+import { ResponsePageMeta } from 'src/shared/types/page-meta.type';
 
 export const ApiOkResponsePaginated = <DataDto extends Type<unknown>>(
   dataDto: DataDto,

@@ -1,4 +1,4 @@
-import { PageMeta } from 'shared/types/page-meta.type';
+import { PageMeta } from 'src/shared/types/page-meta.type';
 
 export const metaDataConvert = <Type>({
   data,
