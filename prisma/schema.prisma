@@ -1,4 +1,4 @@
-//🧩Don't Edit this file.✨Generated in Sat Dec 09 2023 22:50:14 GMT+0700 (GMT+07:00)✨
+//🧩Don't Edit this file.✨Generated in Sat Dec 09 2023 23:10:26 GMT+0700 (GMT+07:00)✨
 model Admin {
 
   id        Int       @id @default(autoincrement())
@@ -84,6 +84,7 @@ model Log {
   car        Car?      @relation(fields: [carId], references: [id])
   carGuestId Int?
   carGuest   CarGuest? @relation(fields: [carGuestId], references: [id])
+  licenseUrl String?   @db.Text
   timestamp  DateTime  @default(now())
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
