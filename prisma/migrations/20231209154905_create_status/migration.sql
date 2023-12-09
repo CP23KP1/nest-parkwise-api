@@ -76,6 +76,20 @@ CREATE TABLE `log` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `parking` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `description` VARCHAR(191) NULL,
+    `amount` INTEGER NOT NULL DEFAULT 0,
+    `zoneId` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+    `deletedAt` DATETIME(3) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `staff` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `firstname` VARCHAR(191) NOT NULL,
@@ -83,6 +97,7 @@ CREATE TABLE `staff` (
     `email` VARCHAR(191) NOT NULL,
     `phoneNumber` VARCHAR(191) NOT NULL,
     `position` ENUM('Professor', 'Researcher', 'Assistant', 'Staff', 'Student', 'Other') NOT NULL DEFAULT 'Other',
+    `staff` BOOLEAN NOT NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `deletedAt` DATETIME(3) NULL,
@@ -124,3 +139,6 @@ ALTER TABLE `log` ADD CONSTRAINT `log_carId_fkey` FOREIGN KEY (`carId`) REFERENC
 
 -- AddForeignKey
 ALTER TABLE `log` ADD CONSTRAINT `log_carGuestId_fkey` FOREIGN KEY (`carGuestId`) REFERENCES `car_guest`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `parking` ADD CONSTRAINT `parking_zoneId_fkey` FOREIGN KEY (`zoneId`) REFERENCES `zone`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
