@@ -15,12 +15,16 @@ import { UpdateDeviceDto } from './dto/update-device.dto';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import JwtAuthGuard from 'src/auth/jwt/jwt-auth.guard';
+import { CustomApiUnauthorize } from 'src/shared/decorators/custom-api-unauthoirze.decorator';
+import { ApiOkResponsePaginated } from 'src/shared/decorators/api-ok-response-paginated.decorator';
+import { DeviceResponse } from './responses/device.response';
 
 @Controller('devices')
 @ApiTags('Devices')
@@ -32,6 +36,12 @@ export class DeviceController {
   @ApiBody({ type: CreateDeviceDto })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    status: 201,
+    description: 'Create new device successfully and return the created device',
+    type: DeviceResponse,
+  })
+  @CustomApiUnauthorize()
   create(@Body() createDeviceDto: CreateDeviceDto) {
     return this.deviceService.create(createDeviceDto);
   }
@@ -42,6 +52,10 @@ export class DeviceController {
   @ApiQuery({ name: 'limit', required: false })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponsePaginated(DeviceResponse, {
+    description: 'Return all devices',
+  })
+  @CustomApiUnauthorize()
   findAll(
     @Query('page') page = 1,
     @Query('limit') limit = 10,
@@ -60,20 +74,40 @@ export class DeviceController {
 
   @Get(':id')
   @ApiOperation({ summary: '(Device) Get by device id' })
-  @ApiParam({ name: 'id', required: true, description: 'The device id' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'The device id',
+    example: 1,
+  })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  findOne(@Param('id') id: string) {
+  @ApiOkResponse({
+    description: 'Return the device',
+    type: DeviceResponse,
+  })
+  @CustomApiUnauthorize()
+  findOne(@Param('id') id: number) {
     return this.deviceService.findOne(+id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: '(Device) Update device by id' })
-  @ApiParam({ name: 'id', required: true, description: 'The device id' })
-  @ApiBody({ type: UpdateDeviceDto })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'The device id',
+    example: 1,
+  })
+  @ApiBody({ type: CreateDeviceDto })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  update(@Param('id') id: string, @Body() updateDeviceDto: UpdateDeviceDto) {
+  @ApiOkResponse({
+    description: 'Return the updated device',
+    type: DeviceResponse,
+  })
+  @CustomApiUnauthorize()
+  update(@Param('id') id: number, @Body() updateDeviceDto: UpdateDeviceDto) {
     return this.deviceService.update(+id, updateDeviceDto);
   }
 
@@ -82,12 +116,17 @@ export class DeviceController {
   @ApiParam({
     name: 'id',
     required: true,
-    type: 'string',
     description: 'The device id',
+    example: 1,
   })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  remove(@Param('id') id: string) {
+  @ApiOkResponse({
+    description: 'Return the deleted device',
+    type: DeviceResponse,
+  })
+  @CustomApiUnauthorize()
+  remove(@Param('id') id: number) {
     return this.deviceService.remove(+id);
   }
 }
