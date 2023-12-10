@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform, TransformFnParams } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class InputLicensePlateDto {
@@ -6,10 +7,11 @@ export class InputLicensePlateDto {
     type: String,
     required: true,
     description: 'The is the license plate',
-    example: 'กก 2503',
+    example: 'กก2503',
   })
   @IsString()
   @IsNotEmpty()
+  @Transform(({ value }: TransformFnParams) => value?.trim())
   licensePlate: string;
 
   @ApiProperty({
@@ -30,6 +32,5 @@ export class InputLicensePlateDto {
   })
   @IsNumber()
   @IsNotEmpty()
-  
   zoneId: number;
 }

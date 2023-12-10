@@ -13,7 +13,7 @@ const client = new S3Client({ region: 'REGION' });
 export class LicensePlateService {
   constructor(private prismaService: PrismaService) {}
 
-  async test(licensePlateDto: InputLicensePlateDto) {
+  async saveRecord(licensePlateDto: InputLicensePlateDto) {
     let carId = 0;
     let staffId = 0;
     let zoneId = licensePlateDto.zoneId;
@@ -43,8 +43,7 @@ export class LicensePlateService {
           licenseUrl: licensePlateDto.licensePlateUrl,
         },
       });
-
-      console.log('this is created logs jaa ', logs);
+      return logs;
     } catch (error) {
       console.log('error creating logs', error);
     }
@@ -89,7 +88,7 @@ export class LicensePlateService {
             zone: true,
           },
           orderBy: {
-            createdAt: 'desc'
+            createdAt: 'desc',
           },
         }),
         this.prismaService.log.count({
