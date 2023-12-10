@@ -22,7 +22,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import JwtAuthGuard from 'src/auth/jwt/jwt-auth.guard';
-import { CustomApiUnauthorize } from 'src/shared/decorators/custom-api-unauthoirze.decorator';
+import { CustomApiUnauthorized } from 'src/shared/decorators/custom-api-unauthoirzed.decorator';
 import { ApiOkResponsePaginated } from 'src/shared/decorators/api-ok-response-paginated.decorator';
 import { DeviceResponse } from './responses/device.response';
 
@@ -41,7 +41,7 @@ export class DeviceController {
     description: 'Create new device successfully and return the created device',
     type: DeviceResponse,
   })
-  @CustomApiUnauthorize()
+  @CustomApiUnauthorized()
   create(@Body() createDeviceDto: CreateDeviceDto) {
     return this.deviceService.create(createDeviceDto);
   }
@@ -55,7 +55,7 @@ export class DeviceController {
   @ApiOkResponsePaginated(DeviceResponse, {
     description: 'Return all devices',
   })
-  @CustomApiUnauthorize()
+  @CustomApiUnauthorized()
   findAll(
     @Query('page') page = 1,
     @Query('limit') limit = 10,
@@ -86,7 +86,7 @@ export class DeviceController {
     description: 'Return the device',
     type: DeviceResponse,
   })
-  @CustomApiUnauthorize()
+  @CustomApiUnauthorized()
   findOne(@Param('id') id: number) {
     return this.deviceService.findOne(+id);
   }
@@ -106,7 +106,7 @@ export class DeviceController {
     description: 'Return the updated device',
     type: DeviceResponse,
   })
-  @CustomApiUnauthorize()
+  @CustomApiUnauthorized()
   update(@Param('id') id: number, @Body() updateDeviceDto: UpdateDeviceDto) {
     return this.deviceService.update(+id, updateDeviceDto);
   }
@@ -125,7 +125,7 @@ export class DeviceController {
     description: 'Return the deleted device',
     type: DeviceResponse,
   })
-  @CustomApiUnauthorize()
+  @CustomApiUnauthorized()
   remove(@Param('id') id: number) {
     return this.deviceService.remove(+id);
   }
