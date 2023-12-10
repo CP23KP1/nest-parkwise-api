@@ -21,8 +21,10 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateZoneResponse } from './dto/response/create-zone.response';
+import { ZoneResponse } from './responses/zone.response';
 import JwtAuthGuard from 'src/auth/jwt/jwt-auth.guard';
+import { CustomApiUnauthorized } from 'src/shared/decorators/custom-api-unauthoirzed.decorator';
+import { ApiOkResponsePaginated } from 'src/shared/decorators/api-ok-response-paginated.decorator';
 
 @Controller('zones')
 @ApiTags('Zones')
@@ -32,12 +34,14 @@ export class ZoneController {
   @Post()
   @ApiOperation({ summary: '(Zone) Create a new zone' })
   @ApiBody({ type: CreateZoneDto })
-  @ApiOkResponse({
-    description: 'Zone created successfully',
-    type: CreateZoneResponse,
-  })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    status: 201,
+    description: 'Zone created successfully',
+    type: ZoneResponse,
+  })
+  @CustomApiUnauthorized()
   create(@Body() createZoneDto: CreateZoneDto) {
     return this.zoneService.create(createZoneDto);
   }
@@ -48,6 +52,10 @@ export class ZoneController {
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponsePaginated(ZoneResponse, {
+    description: 'Return all zones',
+  })
+  @CustomApiUnauthorized()
   findAll(
     @Query('page') page = 1,
     @Query('limit') limit = 10,
@@ -69,6 +77,12 @@ export class ZoneController {
   @ApiParam({ name: 'id', required: true, type: Number, example: 1 })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    status: 200,
+    description: 'Return a zone by id',
+    type: ZoneResponse,
+  })
+  @CustomApiUnauthorized()
   findOne(@Param('id') id: string) {
     return this.zoneService.findOne(+id);
   }
@@ -76,9 +90,15 @@ export class ZoneController {
   @Patch(':id')
   @ApiOperation({ summary: '(Zone) Update a zone by id' })
   @ApiParam({ name: 'id', required: true, type: Number, example: 1 })
-  @ApiBody({ type: UpdateZoneDto })
+  @ApiBody({ type: CreateZoneDto })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    status: 200,
+    description: 'Zone updated successfully and return the updated zone',
+    type: ZoneResponse,
+  })
+  @CustomApiUnauthorized()
   update(@Param('id') id: string, @Body() updateZoneDto: UpdateZoneDto) {
     return this.zoneService.update(+id, updateZoneDto);
   }
@@ -86,7 +106,15 @@ export class ZoneController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  remove(@Param('id') id: string) {
+  @ApiOperation({ summary: '(Zone) Delete a zone by id' })
+  @ApiParam({ name: 'id', required: true, type: Number, example: 1 })
+  @ApiOkResponse({
+    status: 200,
+    description: 'Zone deleted successfully and return the deleted zone',
+    type: ZoneResponse,
+  })
+  @CustomApiUnauthorized()
+  remove(@Param('id') id: number) {
     return this.zoneService.remove(+id);
   }
 }
