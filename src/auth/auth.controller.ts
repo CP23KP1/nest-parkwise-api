@@ -12,15 +12,18 @@ import { RegisterDto } from './dto/register.dto';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiForbiddenResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { RegisterResponse } from './dto/response/register.response';
 import { LoginResponse } from './dto/response/login.response';
 import JwtAuthGuard from './jwt/jwt-auth.guard';
 import AuthUserRequest from './types/auth-user-request.type';
 import JwtRefreshGuard from './jwt/jwt-refresh.guard';
+import { CustomApiUnauthorize } from 'src/shared/decorators/custom-api-unauthoirze.decorator';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -33,6 +36,21 @@ export class AuthController {
   @ApiOkResponse({
     description: 'User logged in successfully',
     type: LoginResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Email or password is incorrect',
+    schema: {
+      properties: {
+        statusCode: {
+          type: 'number',
+          example: 401,
+        },
+        message: {
+          type: 'string',
+          example: 'Email or password is incorrect',
+        },
+      },
+    },
   })
   login(@Body() loginDto: LoginDto) {
     return this.authService.validateUser(loginDto.email, loginDto.password);
@@ -47,6 +65,21 @@ export class AuthController {
   @ApiOkResponse({
     description: 'User registered successfully',
     type: RegisterResponse,
+  })
+  @ApiForbiddenResponse({
+    description: 'An account with this email already exists',
+    schema: {
+      properties: {
+        statusCode: {
+          type: 'number',
+          example: 403,
+        },
+        message: {
+          type: 'string',
+          example: 'An account with this email already exists',
+        },
+      },
+    },
   })
   register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
@@ -64,6 +97,7 @@ export class AuthController {
       },
     },
   })
+  @CustomApiUnauthorize()
   @UseGuards(JwtRefreshGuard)
   async refreshToken(@Request() req: AuthUserRequest) {
     const { access_token } = this.authService.signToken(
@@ -81,6 +115,7 @@ export class AuthController {
     description: 'User found successfully',
     type: RegisterResponse,
   })
+  @CustomApiUnauthorize()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   me(@Request() req: AuthUserRequest) {
