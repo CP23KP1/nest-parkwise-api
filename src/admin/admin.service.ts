@@ -31,9 +31,9 @@ export class AdminService {
 
     if (search) {
       whereCondition.OR = [
-        { firstname: { contains: search } }, 
-        { lastname: { contains: search } }, 
-        { email: { contains: search } }, 
+        { firstname: { contains: search } },
+        { lastname: { contains: search } },
+        { email: { contains: search } },
       ];
     }
 
