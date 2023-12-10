@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class CreateZoneResponse {
+export class ZoneResponse {
   @ApiProperty({
     type: Number,
     description: 'Zone id',
