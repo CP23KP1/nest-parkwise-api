@@ -13,6 +13,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiForbiddenResponse,
+  ApiHeader,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -99,6 +100,13 @@ export class AuthController {
   })
   @CustomApiUnauthorized()
   @UseGuards(JwtRefreshGuard)
+  @ApiHeader({
+    name: 'Refresh',
+    schema: {
+      type: 'string',
+      default: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+    },
+  })
   async refreshToken(@Request() req: AuthUserRequest) {
     const { access_token } = this.authService.signToken(
       ['access_token'],

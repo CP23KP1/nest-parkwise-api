@@ -23,6 +23,8 @@ import {
 } from '@nestjs/swagger';
 import JwtAuthGuard from 'src/auth/jwt/jwt-auth.guard';
 import { ApiOkResponsePaginated } from 'src/shared/decorators/api-ok-response-paginated.decorator';
+import { CustomApiUnauthorized } from 'src/shared/decorators/custom-api-unauthoirzed.decorator';
+import { StaffResponse } from './responses/staff.response';
 
 @Controller('staffs')
 @ApiTags('Staffs')
@@ -35,7 +37,7 @@ export class StaffController {
   @ApiOkResponse({
     status: 201,
     description: 'Return the created staff',
-    type: CreateStaffDto,
+    type: StaffResponse,
   })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
@@ -47,11 +49,19 @@ export class StaffController {
   @ApiOperation({ summary: '(Staff) Get all staff' })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
-  @ApiQuery({ name: 'search', required: false, type: Number, example: 'John' })
+  @ApiQuery({ name: 'search', required: false, type: String, example: 'John' })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: String,
+    example: 'all',
+    enum: ['all', 'active', 'inactive'],
+  })
   @UseGuards(JwtAuthGuard)
-  @ApiOkResponsePaginated(CreateStaffDto, {
+  @ApiOkResponsePaginated(StaffResponse, {
     description: 'Return all staff',
   })
+  @CustomApiUnauthorized()
   @ApiBearerAuth()
   findAll(
     @Query('page') page: number = 1,
@@ -67,8 +77,9 @@ export class StaffController {
   @ApiParam({ name: 'id', required: true, type: Number, example: 1 })
   @ApiOkResponse({
     description: 'Return the staff',
-    type: CreateStaffDto,
+    type: StaffResponse,
   })
+  @CustomApiUnauthorized()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   findOne(@Param('id') id: string) {
@@ -84,8 +95,9 @@ export class StaffController {
   })
   @ApiOkResponse({
     description: 'Return the updated staff',
-    type: CreateStaffDto,
+    type: StaffResponse,
   })
+  @CustomApiUnauthorized()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateStaffDto: UpdateStaffDto) {
@@ -97,8 +109,9 @@ export class StaffController {
   @ApiParam({ name: 'id', required: true, type: Number, example: 1 })
   @ApiOkResponse({
     description: 'Return the deleted staff',
-    type: CreateStaffDto,
+    type: StaffResponse,
   })
+  @CustomApiUnauthorized()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   remove(@Param('id') id: number) {
