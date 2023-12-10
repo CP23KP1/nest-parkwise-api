@@ -4,7 +4,6 @@ import { StaffModule } from './staff/staff.module';
 import { DeviceModule } from './device/device.module';
 import { ZoneModule } from './zone/zone.module';
 import { CarModule } from './car/car.module';
-import { LprModule } from './lpr/lpr.module';
 import { LicenseModule } from './license-plate/license-plate.module';
 import { AdminModule } from './admin/admin.module';
 import { LineService } from './line/line.service';
@@ -21,7 +20,6 @@ import { ConfigModule } from '@nestjs/config';
     DeviceModule,
     ZoneModule,
     CarModule,
-    LprModule,
     LicenseModule,
     AdminModule,
     ParkingModule,
