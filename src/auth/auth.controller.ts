@@ -23,7 +23,7 @@ import { LoginResponse } from './dto/response/login.response';
 import JwtAuthGuard from './jwt/jwt-auth.guard';
 import AuthUserRequest from './types/auth-user-request.type';
 import JwtRefreshGuard from './jwt/jwt-refresh.guard';
-import { CustomApiUnauthorize } from 'src/shared/decorators/custom-api-unauthoirze.decorator';
+import { CustomApiUnauthorized } from 'src/shared/decorators/custom-api-unauthoirzed.decorator';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -97,7 +97,7 @@ export class AuthController {
       },
     },
   })
-  @CustomApiUnauthorize()
+  @CustomApiUnauthorized()
   @UseGuards(JwtRefreshGuard)
   async refreshToken(@Request() req: AuthUserRequest) {
     const { access_token } = this.authService.signToken(
@@ -115,7 +115,7 @@ export class AuthController {
     description: 'User found successfully',
     type: RegisterResponse,
   })
-  @CustomApiUnauthorize()
+  @CustomApiUnauthorized()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   me(@Request() req: AuthUserRequest) {
