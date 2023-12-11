@@ -36,6 +36,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('parkwise')
     .addBearerAuth({ in: 'header', type: 'http' })
+    .addServer(process.env.SWAGGER_SERVER_URL || 'http://localhost:8080')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
