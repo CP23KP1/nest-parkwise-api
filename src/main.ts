@@ -27,7 +27,7 @@ async function bootstrap() {
   app.enableCors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    allowedHeaders: 'Content-Type, Accept, Authorization',
+    allowedHeaders: 'Content-Type, Accept, Authorization, refresh',
   });
 
   const config = new DocumentBuilder()
@@ -35,7 +35,6 @@ async function bootstrap() {
     .setDescription('The Parkwise API description')
     .setVersion('1.0')
     .addTag('parkwise')
-    .addBearerAuth({ in: 'header', type: 'http' })
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
