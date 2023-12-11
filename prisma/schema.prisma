@@ -1,6 +1,13 @@
-//🧩Don't Edit this file.✨Generated in Sat Dec 09 2023 23:10:26 GMT+0700 (GMT+07:00)✨
-model Admin {
+generator client {
+  provider = "prisma-client-js"
+}
 
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
   id        Int       @id @default(autoincrement())
   email     String    @unique
   password  String?
@@ -13,17 +20,7 @@ model Admin {
   @@map("admin")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-}
-
 model CarGuest {
-
   id           Int       @id @default(autoincrement())
   licensePlate String
   color        String
@@ -39,7 +36,6 @@ model CarGuest {
 }
 
 model Car {
-
   id           Int       @id @default(autoincrement())
   licensePlate String
   color        String
@@ -49,15 +45,15 @@ model Car {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
-  staff        Staff     @relation(fields: [staffId], references: [id])
   staffId      Int
+  staff        Staff     @relation(fields: [staffId], references: [id])
   Log          Log[]
 
+  @@index([staffId], map: "car_staffId_fkey")
   @@map("car")
 }
 
 model Device {
-
   id           Int       @id @default(autoincrement())
   name         String
   description  String?
@@ -67,76 +63,69 @@ model Device {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
-  zone         Zone      @relation(fields: [zoneId], references: [id])
   zoneId       Int
+  zone         Zone      @relation(fields: [zoneId], references: [id])
 
+  @@index([zoneId], map: "device_zoneId_fkey")
   @@map("device")
 }
 
 model Log {
-
   id         Int       @id @default(autoincrement())
   zoneId     Int
-  zone       Zone      @relation(fields: [zoneId], references: [id])
   staffId    Int
-  staff      Staff     @relation(fields: [staffId], references: [id])
   carId      Int?
-  car        Car?      @relation(fields: [carId], references: [id])
   carGuestId Int?
-  carGuest   CarGuest? @relation(fields: [carGuestId], references: [id])
-  licenseUrl String?   @db.Text
   timestamp  DateTime  @default(now())
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   deletedAt  DateTime?
+  licenseUrl String?   @db.Text
+  carGuest   CarGuest? @relation(fields: [carGuestId], references: [id])
+  car        Car?      @relation(fields: [carId], references: [id])
+  staff      Staff     @relation(fields: [staffId], references: [id])
+  zone       Zone      @relation(fields: [zoneId], references: [id])
 
+  @@index([carGuestId], map: "log_carGuestId_fkey")
+  @@index([carId], map: "log_carId_fkey")
+  @@index([staffId], map: "log_staffId_fkey")
+  @@index([zoneId], map: "log_zoneId_fkey")
   @@map("log")
 }
 
 model Parking {
-
   id          Int       @id @default(autoincrement())
   name        String
   description String?
   amount      Int       @default(0)
-  zone        Zone      @relation(fields: [zoneId], references: [id])
   zoneId      Int
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
+  zone        Zone      @relation(fields: [zoneId], references: [id])
 
+  @@index([zoneId], map: "parking_zoneId_fkey")
   @@map("parking")
 }
 
 model Staff {
-
   id          Int           @id @default(autoincrement())
   firstname   String
   lastname    String
   email       String
   phoneNumber String
   position    StaffPosition @default(Other)
-  status      Boolean       @default(false)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   deletedAt   DateTime?
+  status      Boolean       @default(false)
   cars        Car[]
   Log         Log[]
 
   @@map("staff")
 }
 
-enum StaffPosition {
-  Professor
-  Researcher
-  Assistant
-  Staff
-  Student
-  Other
-}
-
 model Zone {
-
   id              Int       @id @default(autoincrement())
   name            String
   description     String?
@@ -149,8 +138,17 @@ model Zone {
   updatedAt       DateTime  @updatedAt
   deletedAt       DateTime?
   devices         Device[]
-  parking         Parking[]
   Log             Log[]
+  parking         Parking[]
 
   @@map("zone")
+}
+
+enum StaffPosition {
+  Professor
+  Researcher
+  Assistant
+  Staff
+  Student
+  Other
 }

@@ -41,6 +41,7 @@ CREATE TABLE `car` (
     `deletedAt` DATETIME(3) NULL,
     `staffId` INTEGER NOT NULL,
 
+    INDEX `car_staffId_fkey`(`staffId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -57,6 +58,7 @@ CREATE TABLE `device` (
     `deletedAt` DATETIME(3) NULL,
     `zoneId` INTEGER NOT NULL,
 
+    INDEX `device_zoneId_fkey`(`zoneId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -71,7 +73,12 @@ CREATE TABLE `log` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `deletedAt` DATETIME(3) NULL,
+    `licenseUrl` TEXT NULL,
 
+    INDEX `log_carGuestId_fkey`(`carGuestId`),
+    INDEX `log_carId_fkey`(`carId`),
+    INDEX `log_staffId_fkey`(`staffId`),
+    INDEX `log_zoneId_fkey`(`zoneId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -86,6 +93,7 @@ CREATE TABLE `parking` (
     `updatedAt` DATETIME(3) NOT NULL,
     `deletedAt` DATETIME(3) NULL,
 
+    INDEX `parking_zoneId_fkey`(`zoneId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -97,10 +105,10 @@ CREATE TABLE `staff` (
     `email` VARCHAR(191) NOT NULL,
     `phoneNumber` VARCHAR(191) NOT NULL,
     `position` ENUM('Professor', 'Researcher', 'Assistant', 'Staff', 'Student', 'Other') NOT NULL DEFAULT 'Other',
-    `staff` BOOLEAN NOT NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `deletedAt` DATETIME(3) NULL,
+    `status` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -129,16 +137,16 @@ ALTER TABLE `car` ADD CONSTRAINT `car_staffId_fkey` FOREIGN KEY (`staffId`) REFE
 ALTER TABLE `device` ADD CONSTRAINT `device_zoneId_fkey` FOREIGN KEY (`zoneId`) REFERENCES `zone`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `log` ADD CONSTRAINT `log_zoneId_fkey` FOREIGN KEY (`zoneId`) REFERENCES `zone`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `log` ADD CONSTRAINT `log_staffId_fkey` FOREIGN KEY (`staffId`) REFERENCES `staff`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `log` ADD CONSTRAINT `log_carGuestId_fkey` FOREIGN KEY (`carGuestId`) REFERENCES `car_guest`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `log` ADD CONSTRAINT `log_carId_fkey` FOREIGN KEY (`carId`) REFERENCES `car`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `log` ADD CONSTRAINT `log_carGuestId_fkey` FOREIGN KEY (`carGuestId`) REFERENCES `car_guest`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `log` ADD CONSTRAINT `log_staffId_fkey` FOREIGN KEY (`staffId`) REFERENCES `staff`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `log` ADD CONSTRAINT `log_zoneId_fkey` FOREIGN KEY (`zoneId`) REFERENCES `zone`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `parking` ADD CONSTRAINT `parking_zoneId_fkey` FOREIGN KEY (`zoneId`) REFERENCES `zone`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
