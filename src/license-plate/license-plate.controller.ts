@@ -34,11 +34,16 @@ export class LicensePlateController {
   @ApiQuery({ name: 'search', required: false, example: 'กก2503' })
   @ApiQuery({ name: 'zoneId', required: false, example: 1 })
   findAll(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
     @Query('search') search: string,
     @Query('zoneId') zoneId: number,
   ) {
-    return this.licensePlateService.get({ page, limit, search, zoneId });
+    return this.licensePlateService.get({
+      page: +page,
+      limit: +limit,
+      search,
+      zoneId,
+    });
   }
 }
