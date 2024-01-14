@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -81,8 +81,16 @@ export class DeviceService {
     });
   }
 
-  findOne(id: number) {
-    return this.prismaService.device.findUnique({ where: { id } });
+  async findOne(id: number) {
+    const device = await this.prismaService.device.findUnique({
+      where: { id },
+    });
+
+    if (!device) {
+      throw new NotFoundException('Device not found');
+    }
+
+    return device;
   }
 
   update(id: number, updateDeviceDto: UpdateDeviceDto) {
@@ -92,7 +100,8 @@ export class DeviceService {
     });
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    await this.findOne(id);
     return this.prismaService.device.update({
       where: { id },
       data: { deletedAt: new Date() },

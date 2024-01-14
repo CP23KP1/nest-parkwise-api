@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -65,10 +65,14 @@ export class StaffService {
     });
   }
 
-  findOne(id: number) {
-    return this.prismaService.staff.findUnique({
+  async findOne(id: number) {
+    const staff = await this.prismaService.staff.findUnique({
       where: { id },
     });
+    if (!staff) {
+      throw new NotFoundException('Staff not found');
+    }
+    return staff;
   }
 
   update(id: number, updateStaffDto: UpdateStaffDto) {
@@ -79,6 +83,7 @@ export class StaffService {
   }
 
   async remove(id: number) {
+    await this.findOne(id);
     return this.prismaService.staff.delete({
       where: { id: id },
     });

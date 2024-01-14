@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateZoneDto } from './dto/create-zone.dto';
 import { UpdateZoneDto } from './dto/update-zone.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -29,17 +29,25 @@ export class ZoneService {
     const whereCondition: any = {
       deletedAt: null,
     };
-  
+
     if (search) {
       whereCondition.OR = [
         { name: { contains: search } },
         { description: { contains: search } },
-        { maximumCapacity: { equals: !isNaN(parseInt(search)) ? parseInt(search) : undefined } },
-        { occupancy: { equals: !isNaN(parseInt(search)) ? parseInt(search) : undefined } },
+        {
+          maximumCapacity: {
+            equals: !isNaN(parseInt(search)) ? parseInt(search) : undefined,
+          },
+        },
+        {
+          occupancy: {
+            equals: !isNaN(parseInt(search)) ? parseInt(search) : undefined,
+          },
+        },
         { address: { contains: search } },
       ];
     }
-  
+
     if (orderBy && orderDirection) {
       switch (orderBy) {
         case 'maximumCapacity':
@@ -51,18 +59,18 @@ export class ZoneService {
           break;
       }
     }
-  
+
     const total = await this.prismaService.zone.count({
       where: whereCondition,
     });
-  
+
     const data = await this.prismaService.zone.findMany({
       skip: (page - 1) * limit,
       take: limit,
       where: whereCondition,
       orderBy: orderCondition,
     });
-  
+
     return metaDataConvert({
       data,
       total,
@@ -70,9 +78,13 @@ export class ZoneService {
       page,
     });
   }
-  
-  findOne(id: number) {
-    return this.prismaService.zone.findUnique({ where: { id } });
+
+  async findOne(id: number) {
+    const zone = await this.prismaService.zone.findUnique({ where: { id } });
+    if (!zone) {
+      throw new NotFoundException('Zone not found');
+    }
+    return zone;
   }
 
   update(id: number, updateZoneDto: UpdateZoneDto) {
@@ -82,7 +94,8 @@ export class ZoneService {
     });
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    await this.findOne(id);
     return this.prismaService.zone.delete({ where: { id } });
   }
 }

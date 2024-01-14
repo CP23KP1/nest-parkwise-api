@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -93,15 +93,20 @@ export class CarService {
     });
   }
 
-  findOne(id: number) {
-    return this.prismaService.car.findUnique({ where: { id } });
+  async findOne(id: number) {
+    const car = await this.prismaService.car.findUnique({ where: { id } });
+    if (!car) {
+      throw new NotFoundException('Car not found');
+    }
+    return car;
   }
 
   update(id: number, updateCarDto: UpdateCarDto) {
     return this.prismaService.car.update({ where: { id }, data: updateCarDto });
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    await this.findOne(id);
     return this.prismaService.car.update({
       where: { id },
       data: { deletedAt: new Date() },
