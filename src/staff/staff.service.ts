@@ -33,6 +33,7 @@ export class StaffService {
         { email: { contains: search } },
         { phoneNumber: { contains: search } },
       ],
+      AND: [{ deletedAt: null }],
     };
 
     if (search) {
@@ -67,14 +68,13 @@ export class StaffService {
 
   async findOne(id: number) {
     const staff = await this.prismaService.staff.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
     });
     if (!staff) {
       throw new NotFoundException('Staff not found');
     }
     return staff;
   }
-
   update(id: number, updateStaffDto: UpdateStaffDto) {
     return this.prismaService.staff.update({
       where: { id },
@@ -84,8 +84,9 @@ export class StaffService {
 
   async remove(id: number) {
     await this.findOne(id);
-    return this.prismaService.staff.delete({
-      where: { id: id },
+    return this.prismaService.staff.update({
+      where: { id },
+      data: { deletedAt: new Date() },
     });
   }
 }

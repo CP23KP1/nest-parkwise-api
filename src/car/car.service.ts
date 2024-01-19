@@ -48,6 +48,7 @@ export class CarService {
           },
         },
       ];
+      whereCondition.deletedAt = null
     }
 
     const orderCondition: Record<string, 'asc' | 'desc'> = {};
