@@ -16,9 +16,20 @@ export class LicensePlateService {
   async saveRecord(licensePlateDto: InputLicensePlateDto) {
     let carId = 0;
     let staffId = 0;
-    let zoneId = licensePlateDto.zoneId;
+    let deviceId = licensePlateDto.deviceId;
+    let zoneId = 0;
 
     try {
+      await this.prismaService.device
+        .findFirst({
+          where: {
+            id: parseInt(deviceId),
+          },
+        })
+        .then((device) => {
+          zoneId = device.zoneId;
+        });
+
       const result = await this.prismaService.car.findFirst({
         where: {
           licensePlate: licensePlateDto.licensePlate,
@@ -34,6 +45,8 @@ export class LicensePlateService {
       console.log('error', error);
     }
 
+    const direction = await this.checkDirection(carId);
+    await this.handleParking(parseInt(deviceId), direction)
     try {
       const logs = await this.prismaService.log.create({
         data: {
@@ -41,12 +54,15 @@ export class LicensePlateService {
           staffId: staffId,
           zoneId: Number(zoneId),
           licenseUrl: licensePlateDto.licensePlateUrl,
+          arrowDirection: String(direction),
         },
       });
+      await this.updateStaffStatus(staffId);
       return logs;
     } catch (error) {
       console.log('error creating logs', error);
     }
+
   }
 
   async get({
@@ -120,4 +136,98 @@ export class LicensePlateService {
       };
     }
   }
+
+  checkDirection = async (id: number) => {
+    const log = await this.prismaService.log.findFirst({
+      where: {
+        carId: id,
+      },
+      include: {
+        zone: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (log.arrowDirection === 'in') {
+      return 'out';
+    }
+    return 'in';
+  };
+
+  updateStaffStatus = async (id: number) => {
+    let statusUpdate = false;
+    let staffCheck = { status: false };
+    await this.checkStaffStatus(id).then((staff) => {
+      staffCheck = staff;
+    });
+
+    if (staffCheck.status === false) {
+      statusUpdate = true;
+    }
+
+    const staff = await this.prismaService.staff.update({
+      where: {
+        id: id,
+      },
+      data: {
+        status: statusUpdate,
+      },
+    });
+    return staff;
+  };
+
+  checkStaffStatus = async (id: number) => {
+    const staff = await this.prismaService.staff.findFirst({
+      where: {
+        id: id,
+      },
+      select: {
+        status: true,
+      },
+    });
+    return staff;
+  };
+
+  handleParking = async (deviceId: number, direction: string) => {
+    let zoneId = 0;
+    let numberHandle = 1;
+    let currentParkingZone = 0;
+
+    await this.prismaService.device
+      .findFirst({
+        where: {
+          id: deviceId,
+        },
+      })
+      .then((data) => {
+        zoneId = data.zoneId;
+      });
+
+    if (direction === 'out') {
+      numberHandle = -1;
+    }
+
+    await this.prismaService.zone
+      .findFirst({
+        where: {
+          id: zoneId,
+        },
+      })
+      .then((zone) => {
+        currentParkingZone = zone.occupancy;
+      });
+
+    await this.prismaService.zone.update({
+      where: {
+        id: zoneId,
+      },
+      data: {
+        occupancy: currentParkingZone + numberHandle,
+      },
+    });
+  };
+
+  
 }
