@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { InputLicensePlateDto } from './dtos/license-plate.dto';
 import {
@@ -6,6 +6,7 @@ import {
   ListBucketsCommand,
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
+import { error } from 'console';
 
 const client = new S3Client({ region: 'REGION' });
 
@@ -27,8 +28,15 @@ export class LicensePlateService {
           },
         })
         .then((device) => {
-          zoneId = device.zoneId;
-        });
+          if (!device?.zoneId) {
+            return new HttpException(
+              'Can not find with Device ID',
+              HttpStatus.NOT_FOUND,
+            );
+          }
+          zoneId = device?.zoneId;
+        })
+        .catch((error) => console.log('error', error));
 
       const result = await this.prismaService.car.findFirst({
         where: {
@@ -42,27 +50,30 @@ export class LicensePlateService {
       carId = result.id;
       staffId = result.staff.id;
     } catch (error) {
-      console.log('error', error);
+      throw new HttpException('Check payload again', HttpStatus.BAD_REQUEST);
     }
 
     const direction = await this.checkDirection(carId);
-    await this.handleParking(parseInt(deviceId), direction)
+    await this.handleParking(parseInt(deviceId), direction);
     try {
-      const logs = await this.prismaService.log.create({
-        data: {
-          carId: carId,
-          staffId: staffId,
-          zoneId: Number(zoneId),
-          licenseUrl: licensePlateDto.licensePlateUrl,
-          arrowDirection: String(direction),
-        },
-      });
+      const logs = await this.prismaService.log
+        .create({
+          data: {
+            carId: carId,
+            staffId: staffId,
+            zoneId: Number(zoneId),
+            licenseUrl: licensePlateDto.licensePlateUrl,
+            arrowDirection: String(direction),
+          },
+        })
+        .catch((error) => {
+          throw new HttpException(error, HttpStatus.NOT_FOUND);
+        });
       await this.updateStaffStatus(staffId);
       return logs;
     } catch (error) {
       console.log('error creating logs', error);
     }
-
   }
 
   async get({
@@ -202,7 +213,19 @@ export class LicensePlateService {
         },
       })
       .then((data) => {
+        if (!data.zoneId) {
+          throw new HttpException(
+            'Not found zone with device id',
+            HttpStatus.NOT_FOUND,
+          );
+        }
         zoneId = data.zoneId;
+      })
+      .catch((error) => {
+        throw new HttpException(
+          'Not found zone with device id',
+          HttpStatus.NOT_FOUND,
+        );
       });
 
     if (direction === 'out') {
@@ -228,6 +251,4 @@ export class LicensePlateService {
       },
     });
   };
-
-  
 }
