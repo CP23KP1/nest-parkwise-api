@@ -24,6 +24,14 @@ export class InputLicensePlateDto {
   @IsNotEmpty()
   licensePlateUrl: string;
 
+  @ApiProperty({
+    type: String,
+    required: true,
+    description: 'This is device Id that comming from device  environment',
+    example: '1',
+  })
+  @IsString()
+  @IsNotEmpty()
   deviceId: string;
 
 }
