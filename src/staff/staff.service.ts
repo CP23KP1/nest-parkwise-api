@@ -89,4 +89,14 @@ export class StaffService {
       data: { deletedAt: new Date() },
     });
   }
+
+  async getActive() {
+    return await {
+      data: await this.prismaService.staff.count({
+        where: {
+          status: true,
+        },
+      }),
+    };
+  }
 }

@@ -135,7 +135,6 @@ export class LicensePlateService {
         },
       };
     } catch (error) {
-      console.log('error', error);
       return {
         data: [],
         meta: {
