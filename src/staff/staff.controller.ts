@@ -117,4 +117,18 @@ export class StaffController {
   remove(@Param('id') id: number) {
     return this.staffService.remove(+id);
   }
+
+  @Get("active")
+  @ApiOperation({ summary: '(Staff) Get Active Staff' })
+  @ApiOkResponse({
+    description: 'Return the numbers of active staff',
+    type: StaffResponse,
+  })
+  @CustomApiUnauthorized()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  getActive() {
+    return this.staffService.getActive();
+  }
+
 }
