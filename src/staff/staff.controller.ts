@@ -131,4 +131,30 @@ export class StaffController {
     return this.staffService.getActive();
   }
 
+  @Get("history")
+  @ApiOperation({ summary: "Get History"})
+  @ApiOkResponse({
+    description: "Return the history of staff that used the system"
+  })
+  @ApiParam({ name: 'staffId', required: true, type: Number, example: 1 })
+  @CustomApiUnauthorized()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  getHistory(staffId: number) {
+    return this.staffService.getHistory(staffId)
+  }
+
+  @Get("car-detail")
+  @ApiOperation({ summary: "Get History"})
+  @ApiOkResponse({
+    description: "Return the history of staff that used the system"
+  })
+  @ApiParam({ name: 'staffId', required: true, type: Number, example: 1 })
+  @CustomApiUnauthorized()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  getCarDetail(staffId: number) {
+    return this.staffService.getCarDetail(staffId);
+  }
+
 }
