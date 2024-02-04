@@ -98,4 +98,13 @@ export class ZoneService {
     await this.findOne(id);
     return this.prismaService.zone.delete({ where: { id } });
   }
+
+  async getMostParkingLot(limit: number){ 
+    return await this.prismaService.zone.findMany({
+      orderBy: {
+        maximumCapacity: 'desc'
+      },
+      take: limit || 5
+    })
+  }
 }
