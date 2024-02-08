@@ -49,4 +49,8 @@ export class CreateCarDto {
   })
   @IsString()
   province: string;
+
+  @ApiProperty({ type: String })
+  @IsString()
+  imageUrl: string;
 }

@@ -42,4 +42,7 @@ export class CarListResponse {
   @ApiProperty({})
   @Type(() => StaffCarResponse)
   staff: StaffCarResponse;
+
+  @ApiProperty({ type: String })
+  imageUrl: string
 }
