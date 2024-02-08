@@ -1,4 +1,4 @@
-//🧩Don't Edit this file.✨Generated in Thu Feb 08 2024 21:08:43 GMT+0700 (GMT+07:00)✨
+//🧩Don't Edit this file.✨Generated in Thu Feb 08 2024 21:23:13 GMT+0700 (GMT+07:00)✨
 model Admin {
 
   id        Int       @id @default(autoincrement())
@@ -46,6 +46,8 @@ model Car {
   brand        String
   model        String
   year         Int
+  province     String?
+  imageUrl     String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
@@ -117,6 +119,7 @@ model Staff {
   phoneNumber String
   position    StaffPosition @default(Other)
   status      Boolean       @default(false)
+  imageUrl    String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   deletedAt   DateTime?
@@ -145,6 +148,7 @@ model Zone {
   address         String?
   latitude        Float?
   longitude       Float?
+  imageUrl        String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   deletedAt       DateTime?
