@@ -53,4 +53,7 @@ export class StaffResponse {
     example: true,
   })
   status: boolean;
+
+  @ApiProperty({ type: String })
+  imageUrl: string;
 }

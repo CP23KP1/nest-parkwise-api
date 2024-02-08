@@ -71,4 +71,7 @@ export class ZoneResponse {
   @IsNumber()
   @IsNotEmpty()
   longitude: number;
+
+  @ApiProperty({ type: String })
+  imageUrl: string;
 }
