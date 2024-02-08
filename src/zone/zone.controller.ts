@@ -117,4 +117,16 @@ export class ZoneController {
   remove(@Param('id') id: number) {
     return this.zoneService.remove(+id);
   }
+
+  @Get('mostactive')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'This is use for get most active parking lot zones',
+  })
+  @CustomApiUnauthorized()
+  @ApiParam({ name: 'limit', required: false, type: Number, example: 1 })
+  getMostActive(limit: number) {
+    return this.zoneService.getMostParkingLot(limit)
+  }
 }

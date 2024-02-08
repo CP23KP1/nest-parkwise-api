@@ -43,4 +43,14 @@ export class CreateCarDto {
   @IsNumber()
   @IsNotEmpty()
   staffId: number;
+
+  @ApiProperty({
+    type: 'string',
+  })
+  @IsString()
+  province: string;
+
+  @ApiProperty({ type: String })
+  @IsString()
+  imageUrl: string;
 }

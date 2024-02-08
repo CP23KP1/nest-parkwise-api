@@ -30,4 +30,7 @@ export class CarResponse {
 
   @ApiProperty({ type: Number })
   staffId: number;
+
+  @ApiProperty({ type: String })
+  imageUrl: string
 }

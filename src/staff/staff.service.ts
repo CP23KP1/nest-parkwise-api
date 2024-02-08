@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -33,6 +33,7 @@ export class StaffService {
         { email: { contains: search } },
         { phoneNumber: { contains: search } },
       ],
+      AND: [{ deletedAt: null }],
     };
 
     if (search) {
@@ -65,12 +66,15 @@ export class StaffService {
     });
   }
 
-  findOne(id: number) {
-    return this.prismaService.staff.findUnique({
-      where: { id },
+  async findOne(id: number) {
+    const staff = await this.prismaService.staff.findUnique({
+      where: { id, deletedAt: null },
     });
+    if (!staff) {
+      throw new NotFoundException('Staff not found');
+    }
+    return staff;
   }
-
   update(id: number, updateStaffDto: UpdateStaffDto) {
     return this.prismaService.staff.update({
       where: { id },
@@ -79,8 +83,41 @@ export class StaffService {
   }
 
   async remove(id: number) {
-    return this.prismaService.staff.delete({
-      where: { id: id },
+    await this.findOne(id);
+    return this.prismaService.staff.update({
+      where: { id },
+      data: { deletedAt: new Date() },
     });
+  }
+
+  async getActive() {
+    return await {
+      data: await this.prismaService.staff.count({
+        where: {
+          status: true,
+        },
+      }),
+    };
+  }
+
+  async getHistory(staffId: number){
+    console.log('นี่คือ staff id', staffId)
+    return await {
+      data: await this.prismaService.log.findMany({
+        where: {
+          staffId: staffId
+        }
+      })
+    }
+  }
+
+  async getCarDetail(staffId: number){
+    return await {
+      data: await this.prismaService.car.findMany({
+        where: {
+          staffId: staffId
+        }
+      })
+    }
   }
 }

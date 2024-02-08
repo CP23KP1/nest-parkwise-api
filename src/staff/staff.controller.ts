@@ -117,4 +117,44 @@ export class StaffController {
   remove(@Param('id') id: number) {
     return this.staffService.remove(+id);
   }
+
+  @Get("active")
+  @ApiOperation({ summary: '(Staff) Get Active Staff' })
+  @ApiOkResponse({
+    description: 'Return the numbers of active staff',
+    type: StaffResponse,
+  })
+  @CustomApiUnauthorized()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  getActive() {
+    return this.staffService.getActive();
+  }
+
+  @Get("history")
+  @ApiOperation({ summary: "Get History"})
+  @ApiOkResponse({
+    description: "Return the history of staff that used the system"
+  })
+  @ApiParam({ name: 'staffId', required: true, type: Number, example: 1 })
+  @CustomApiUnauthorized()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  getHistory(staffId: number) {
+    return this.staffService.getHistory(staffId)
+  }
+
+  @Get("car-detail")
+  @ApiOperation({ summary: "Get History"})
+  @ApiOkResponse({
+    description: "Return the history of staff that used the system"
+  })
+  @ApiParam({ name: 'staffId', required: true, type: Number, example: 1 })
+  @CustomApiUnauthorized()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  getCarDetail(staffId: number) {
+    return this.staffService.getCarDetail(staffId);
+  }
+
 }

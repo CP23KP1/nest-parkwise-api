@@ -64,4 +64,8 @@ export class CreateZoneDto {
   @IsNumber()
   @IsNotEmpty()
   longitude: number;
+
+  @ApiProperty({ type: String })
+  @IsString()
+  imageUrl: string;
 }

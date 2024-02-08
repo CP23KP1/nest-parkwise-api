@@ -44,4 +44,8 @@ export class CreateStaffDto {
     example: true,
   })
   status: boolean;
+
+  @ApiProperty({ type: String })
+  @IsString()
+  imageUrl: string;
 }
