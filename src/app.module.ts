@@ -9,6 +9,7 @@ import { AdminModule } from './admin/admin.module';
 import { ParkingModule } from './parking/parking.module';
 import { UploadModule } from './upload/upload.module';
 import { ConfigModule } from '@nestjs/config';
+import { EmergencyModule } from './emergency/modules/emergency.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ConfigModule } from '@nestjs/config';
     AdminModule,
     ParkingModule,
     UploadModule,
+    EmergencyModule
   ],
   controllers: [],
 })
