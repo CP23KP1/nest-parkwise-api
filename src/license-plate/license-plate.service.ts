@@ -230,7 +230,7 @@ export class LicensePlateService {
     if (direction === 'out') {
       numberHandle = -1;
     }
-
+    
     await this.prismaService.zone
       .findFirst({
         where: {

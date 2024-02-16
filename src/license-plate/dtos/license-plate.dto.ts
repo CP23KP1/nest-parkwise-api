@@ -34,4 +34,11 @@ export class InputLicensePlateDto {
   @IsNotEmpty()
   deviceId: string;
 
+  @ApiProperty({
+    type: String,
+    required: true,
+    description:"This is tell the user or admin know that is in or out"
+  })
+  @IsString()
+  arrowDirection: string
 }
