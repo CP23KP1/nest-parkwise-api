@@ -9,6 +9,7 @@ import { PrismaService } from 'src/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { Admin, Staff } from '@prisma/client';
 @Injectable()
 export class AuthService {
   constructor(
@@ -17,20 +18,34 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async validateUser(email: string, password: string) {
-    const user = await this.prismaService.admin.findUnique({
-      where: { email },
-    });
-    if (!user) {
+  async validateUser(email: string, password: string, type: 'admin' | 'staff') {
+    let data: Admin | Staff = null;
+
+    if (type === 'admin') {
+      data = await this.prismaService.admin.findUnique({
+        where: { email },
+      });
+    }
+
+    if (type === 'staff') {
+      data = await this.prismaService.staff.findFirst({
+        where: {
+          email,
+        },
+      });
+    }
+    if (!data) {
       throw new UnauthorizedException('Email or password is incorrect');
     }
-    const isPasswordValid = await argon2.verify(user.password, password);
+    const isPasswordValid = await argon2.verify(data.password, password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Email or password is incorrect');
     }
-    delete user.password;
+    delete data.password;
     const signToken = this.signToken(['access_token', 'refresh_token'], {
-      id: user.id,
+      id: data.id,
+      type: type,
+      email: data.email,
     });
     return signToken;
   }
@@ -53,7 +68,10 @@ export class AuthService {
     }
   }
 
-  signToken(tokenList: string[], data: { id: number }) {
+  signToken(
+    tokenList: string[],
+    data: { id: number; type: 'admin' | 'staff'; email: string },
+  ) {
     return {
       ...(tokenList.includes('access_token') && {
         access_token: this.jwtService.sign(data, {

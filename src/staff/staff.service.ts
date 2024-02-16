@@ -3,16 +3,23 @@ import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
 import { PrismaService } from 'src/prisma.service';
 import { metaDataConvert } from 'src/utils/converter.util';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class StaffService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  create(createStaffDto: CreateStaffDto) {
+  async create(createStaffDto: CreateStaffDto) {
     createStaffDto.status = false;
-    return this.prismaService.staff.create({
+    const hashedPassword = await argon2.hash(createStaffDto.password);
+
+    createStaffDto.password = hashedPassword;
+    const staffCreated = await this.prismaService.staff.create({
       data: createStaffDto,
     });
+
+    delete staffCreated.password;
+    return staffCreated;
   }
 
   async findAll({
@@ -100,24 +107,24 @@ export class StaffService {
     };
   }
 
-  async getHistory(staffId: number){
-    console.log('นี่คือ staff id', staffId)
+  async getHistory(staffId: number) {
+    console.log('นี่คือ staff id', staffId);
     return await {
       data: await this.prismaService.log.findMany({
         where: {
-          staffId: staffId
-        }
-      })
-    }
+          staffId: staffId,
+        },
+      }),
+    };
   }
 
-  async getCarDetail(staffId: number){
+  async getCarDetail(staffId: number) {
     return await {
       data: await this.prismaService.car.findMany({
         where: {
-          staffId: staffId
-        }
-      })
-    }
+          staffId: staffId,
+        },
+      }),
+    };
   }
 }

@@ -33,17 +33,20 @@ export class LicensePlateController {
   @ApiQuery({ name: 'limit', required: false, example: 10 })
   @ApiQuery({ name: 'search', required: false, example: 'กก2503' })
   @ApiQuery({ name: 'zoneId', required: false, example: 1 })
+  @ApiQuery({ name: 'date', required: false, example: '2021-08-01' })
   findAll(
     @Query('page') page = 1,
     @Query('limit') limit = 10,
     @Query('search') search: string,
     @Query('zoneId') zoneId: number,
+    @Query('date') date = new Date().toISOString().split('T')[0],
   ) {
     return this.licensePlateService.get({
       page: +page,
       limit: +limit,
       search,
       zoneId,
+      date,
     });
   }
 }

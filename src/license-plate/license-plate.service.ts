@@ -81,17 +81,18 @@ export class LicensePlateService {
     limit = 10,
     search,
     zoneId,
+    date = new Date().toISOString().split('T')[0],
   }: {
     page?: number;
     limit?: number;
     search?: string;
     zoneId?: number;
+    date?: string;
   } = {}) {
     try {
       const whereCondition: any = {};
 
       if (search) {
-        console.log('search', search);
         const searchLower = search.toLowerCase();
         whereCondition.OR = [
           { car: { licensePlate: { contains: searchLower } } },
@@ -102,6 +103,13 @@ export class LicensePlateService {
 
       if (zoneId) {
         whereCondition.zoneId = zoneId;
+      }
+
+      if (date) {
+        whereCondition.createdAt = {
+          gte: new Date(date),
+          lt: new Date(new Date(date).getTime() + 24 * 60 * 60 * 1000),
+        };
       }
 
       const [data, total] = await Promise.all([
@@ -230,7 +238,7 @@ export class LicensePlateService {
     if (direction === 'out') {
       numberHandle = -1;
     }
-    
+
     await this.prismaService.zone
       .findFirst({
         where: {

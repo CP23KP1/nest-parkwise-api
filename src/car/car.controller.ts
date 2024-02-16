@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { CarService } from './car.service';
 import { CreateCarDto } from './dto/create-car.dto';
@@ -26,6 +27,7 @@ import { ApiOkResponsePaginated } from 'src/shared/decorators/api-ok-response-pa
 import { CarListResponse } from './responses/car-list.response';
 import { CustomApiUnauthorized } from 'src/shared/decorators/custom-api-unauthoirzed.decorator';
 import { CarResponse } from './responses/car.response';
+import AuthUserRequest from 'src/auth/types/auth-user-request.type';
 
 @Controller('cars')
 @ApiTags('Cars')
@@ -83,6 +85,20 @@ export class CarController {
       orderBy,
       orderDirection,
     });
+  }
+
+  @Get('/me')
+  @ApiOperation({ summary: '(Car) Get car by user id' })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'Return the car by id',
+    type: CarResponse,
+  })
+  @CustomApiUnauthorized()
+  findCarByMe(@Request() req: AuthUserRequest) {
+    if (req.user.type === 'admin') throw new Error('Admin cannot have a car');
+    return this.carService.findCarByMe(req.user.id);
   }
 
   @Get(':id')

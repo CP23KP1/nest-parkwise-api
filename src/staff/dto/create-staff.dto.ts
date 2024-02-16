@@ -48,4 +48,9 @@ export class CreateStaffDto {
   @ApiProperty({ type: String })
   @IsString()
   imageUrl: string;
+
+  @ApiProperty({ type: String })
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 }

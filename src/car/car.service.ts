@@ -48,7 +48,7 @@ export class CarService {
           },
         },
       ];
-      whereCondition.deletedAt = null
+      whereCondition.deletedAt = null;
     }
 
     const orderCondition: Record<string, 'asc' | 'desc'> = {};
@@ -99,6 +99,18 @@ export class CarService {
     if (!car) {
       throw new NotFoundException('Car not found');
     }
+    return car;
+  }
+
+  async findCarByMe(staffId: number) {
+    const car = await this.prismaService.car.findFirst({
+      where: { staffId, deletedAt: null },
+    });
+
+    if (!car) {
+      throw new NotFoundException('Car not found');
+    }
+
     return car;
   }
 

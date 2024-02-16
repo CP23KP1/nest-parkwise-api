@@ -1,5 +1,5 @@
 export type TokenPayload = {
   id: number;
-  type: 'user' | 'employee';
+  type: 'admin' | 'staff';
   email: string;
 };

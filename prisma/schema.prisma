@@ -1,5 +1,6 @@
-//🧩Don't Edit this file.✨Generated in Fri Feb 09 2024 01:15:58 GMT+0700 (GMT+07:00)✨
+//🧩Don't Edit this file.✨Generated in Fri Feb 16 2024 13:25:20 GMT+0700 (Indochina Time)✨
 model Admin {
+
   id        Int       @id @default(autoincrement())
   email     String    @unique
   password  String?
@@ -22,22 +23,23 @@ datasource db {
 }
 
 model CarGuest {
-  id             Int       @id @default(autoincrement())
-  licensePlate   String
-  color          String
-  brand          String
-  model          String
-  year           Int
-  arrowDirection String
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  deletedAt      DateTime?
-  Log            Log[]
+
+  id           Int       @id @default(autoincrement())
+  licensePlate String
+  color        String
+  brand        String
+  model        String
+  year         Int
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  Log          Log[]
 
   @@map("car_guest")
 }
 
 model Car {
+
   id           Int       @id @default(autoincrement())
   licensePlate String
   color        String
@@ -57,6 +59,7 @@ model Car {
 }
 
 model Device {
+
   id           Int       @id @default(autoincrement())
   name         String
   description  String?
@@ -72,7 +75,20 @@ model Device {
   @@map("device")
 }
 
+model Emergency {
+  id          Int       @id @default(autoincrement())
+  name        String
+  phoneNumber String
+  active      Boolean?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@map("emergency")
+}
+
 model Log {
+
   id             Int       @id @default(autoincrement())
   zoneId         Int
   zone           Zone      @relation(fields: [zoneId], references: [id])
@@ -82,8 +98,8 @@ model Log {
   car            Car?      @relation(fields: [carId], references: [id])
   carGuestId     Int?
   carGuest       CarGuest? @relation(fields: [carGuestId], references: [id])
-  arrowDirection String?
   licenseUrl     String?   @db.Text
+  arrowDirection String?
   timestamp      DateTime  @default(now())
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -93,6 +109,7 @@ model Log {
 }
 
 model Parking {
+
   id          Int       @id @default(autoincrement())
   name        String
   description String?
@@ -107,6 +124,7 @@ model Parking {
 }
 
 model Staff {
+
   id          Int           @id @default(autoincrement())
   firstname   String
   lastname    String
@@ -115,6 +133,7 @@ model Staff {
   position    StaffPosition @default(Other)
   status      Boolean       @default(false)
   imageUrl    String?
+  password    String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   deletedAt   DateTime?
@@ -134,6 +153,7 @@ enum StaffPosition {
 }
 
 model Zone {
+
   id              Int       @id @default(autoincrement())
   name            String
   description     String?
@@ -151,16 +171,4 @@ model Zone {
   Log             Log[]
 
   @@map("zone")
-}
-
-model Emergency {
-  id          Int       @id @default(autoincrement())
-  name        String
-  phoneNumber String
-  active      Boolean?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
-
-  @@map("emergency")
 }

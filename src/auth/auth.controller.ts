@@ -108,10 +108,11 @@ export class AuthController {
     },
   })
   async refreshToken(@Request() req: AuthUserRequest) {
-    const { access_token } = this.authService.signToken(
-      ['access_token'],
-      req.user,
-    );
+    const { access_token } = this.authService.signToken(['access_token'], {
+      email: req.user.email,
+      id: req.user.id,
+      type: req.user.type,
+    });
     return {
       access_token: access_token,
     };
