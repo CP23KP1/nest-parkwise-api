@@ -54,7 +54,11 @@ export class AuthController {
     },
   })
   login(@Body() loginDto: LoginDto) {
-    return this.authService.validateUser(loginDto.email, loginDto.password);
+    return this.authService.validateUser(
+      loginDto.email,
+      loginDto.password,
+      loginDto.type ? loginDto.type : 'admin',
+    );
   }
 
   @Post('/register')
