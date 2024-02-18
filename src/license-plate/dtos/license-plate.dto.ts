@@ -25,12 +25,20 @@ export class InputLicensePlateDto {
   licensePlateUrl: string;
 
   @ApiProperty({
-    type: Number,
+    type: String,
     required: true,
-    description: 'The is zoneID',
-    example: 1,
+    description: 'This is device Id that comming from device  environment',
+    example: '1',
   })
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  zoneId: number;
+  deviceId: string;
+
+  @ApiProperty({
+    type: String,
+    required: true,
+    description:"This is tell the user or admin know that is in or out"
+  })
+  @IsString()
+  arrowDirection: string
 }

@@ -129,4 +129,8 @@ export class DeviceController {
   remove(@Param('id') id: number) {
     return this.deviceService.remove(+id);
   }
+
+  
+
+
 }

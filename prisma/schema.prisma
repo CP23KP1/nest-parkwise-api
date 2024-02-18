@@ -1,12 +1,4 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-}
-
+//🧩Don't Edit this file.✨Generated in Fri Feb 09 2024 01:15:58 GMT+0700 (GMT+07:00)✨
 model Admin {
   id        Int       @id @default(autoincrement())
   email     String    @unique
@@ -20,17 +12,27 @@ model Admin {
   @@map("admin")
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
 model CarGuest {
-  id           Int       @id @default(autoincrement())
-  licensePlate String
-  color        String
-  brand        String
-  model        String
-  year         Int
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  deletedAt    DateTime?
-  Log          Log[]
+  id             Int       @id @default(autoincrement())
+  licensePlate   String
+  color          String
+  brand          String
+  model          String
+  year           Int
+  arrowDirection String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+  Log            Log[]
 
   @@map("car_guest")
 }
@@ -42,14 +44,15 @@ model Car {
   brand        String
   model        String
   year         Int
+  province     String?
+  imageUrl     String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
-  staffId      Int
   staff        Staff     @relation(fields: [staffId], references: [id])
+  staffId      Int
   Log          Log[]
 
-  @@index([staffId], map: "car_staffId_fkey")
   @@map("car")
 }
 
@@ -63,33 +66,29 @@ model Device {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
-  zoneId       Int
   zone         Zone      @relation(fields: [zoneId], references: [id])
+  zoneId       Int
 
-  @@index([zoneId], map: "device_zoneId_fkey")
   @@map("device")
 }
 
 model Log {
-  id         Int       @id @default(autoincrement())
-  zoneId     Int
-  staffId    Int
-  carId      Int?
-  carGuestId Int?
-  timestamp  DateTime  @default(now())
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  deletedAt  DateTime?
-  licenseUrl String?   @db.Text
-  carGuest   CarGuest? @relation(fields: [carGuestId], references: [id])
-  car        Car?      @relation(fields: [carId], references: [id])
-  staff      Staff     @relation(fields: [staffId], references: [id])
-  zone       Zone      @relation(fields: [zoneId], references: [id])
+  id             Int       @id @default(autoincrement())
+  zoneId         Int
+  zone           Zone      @relation(fields: [zoneId], references: [id])
+  staffId        Int
+  staff          Staff     @relation(fields: [staffId], references: [id])
+  carId          Int?
+  car            Car?      @relation(fields: [carId], references: [id])
+  carGuestId     Int?
+  carGuest       CarGuest? @relation(fields: [carGuestId], references: [id])
+  arrowDirection String?
+  licenseUrl     String?   @db.Text
+  timestamp      DateTime  @default(now())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
 
-  @@index([carGuestId], map: "log_carGuestId_fkey")
-  @@index([carId], map: "log_carId_fkey")
-  @@index([staffId], map: "log_staffId_fkey")
-  @@index([zoneId], map: "log_zoneId_fkey")
   @@map("log")
 }
 
@@ -98,13 +97,12 @@ model Parking {
   name        String
   description String?
   amount      Int       @default(0)
+  zone        Zone      @relation(fields: [zoneId], references: [id])
   zoneId      Int
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
-  zone        Zone      @relation(fields: [zoneId], references: [id])
 
-  @@index([zoneId], map: "parking_zoneId_fkey")
   @@map("parking")
 }
 
@@ -115,14 +113,24 @@ model Staff {
   email       String
   phoneNumber String
   position    StaffPosition @default(Other)
+  status      Boolean       @default(false)
+  imageUrl    String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   deletedAt   DateTime?
-  status      Boolean       @default(false)
   cars        Car[]
   Log         Log[]
 
   @@map("staff")
+}
+
+enum StaffPosition {
+  Professor
+  Researcher
+  Assistant
+  Staff
+  Student
+  Other
 }
 
 model Zone {
@@ -134,21 +142,25 @@ model Zone {
   address         String?
   latitude        Float?
   longitude       Float?
+  imageUrl        String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   deletedAt       DateTime?
   devices         Device[]
-  Log             Log[]
   parking         Parking[]
+  Log             Log[]
 
   @@map("zone")
 }
 
-enum StaffPosition {
-  Professor
-  Researcher
-  Assistant
-  Staff
-  Student
-  Other
+model Emergency {
+  id          Int       @id @default(autoincrement())
+  name        String
+  phoneNumber String
+  active      Boolean?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@map("emergency")
 }

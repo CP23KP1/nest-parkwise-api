@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateParkingDto } from './dto/create-parking.dto';
 import { UpdateParkingDto } from './dto/update-parking.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -36,11 +36,11 @@ export class ParkingService {
     orderDirection?: 'asc' | 'desc';
   }) {
     const orderCondition: Record<string, 'asc' | 'desc'> = {};
-    
+
     if (orderField) {
       orderCondition[orderField] = orderDirection || 'desc';
     }
-  
+
     const total = await this.prismaService.parking.count({
       where: {
         deletedAt: null,
@@ -52,7 +52,7 @@ export class ParkingService {
         ],
       },
     });
-  
+
     const data = await this.prismaService.parking.findMany({
       skip: (page - 1) * limit,
       take: limit,
@@ -82,7 +82,7 @@ export class ParkingService {
         },
       },
     });
-  
+
     return metaDataConvert({
       data,
       total,
@@ -90,11 +90,15 @@ export class ParkingService {
       page,
     });
   }
-  
-  findOne(id: number) {
-    return this.prismaService.parking.findUnique({
+
+  async findOne(id: number) {
+    const parking = await this.prismaService.parking.findUnique({
       where: { id, deletedAt: null },
     });
+    if (!parking) {
+      throw new NotFoundException('Parking not found');
+    }
+    return parking;
   }
 
   async update(id: number, updateParkingDto: UpdateParkingDto) {
@@ -121,6 +125,7 @@ export class ParkingService {
   }
 
   async remove(id: number) {
+    await this.findOne(id);
     const parkingFind = await this.prismaService.parking.findFirst({
       where: { id: id },
     });

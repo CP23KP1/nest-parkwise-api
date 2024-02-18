@@ -11,6 +11,7 @@ model Log {
     carGuestId Int?
     carGuest CarGuest? @relation(fields: [carGuestId], references: [id])
     licenseUrl String? @db.Text
+    arrowDirection String?
     timestamp DateTime @default(now())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
