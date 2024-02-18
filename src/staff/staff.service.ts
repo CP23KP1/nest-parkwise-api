@@ -100,24 +100,23 @@ export class StaffService {
     };
   }
 
-  async getHistory(staffId: number){
-    console.log('นี่คือ staff id', staffId)
+  async getHistory(staffId: number) {
     return await {
       data: await this.prismaService.log.findMany({
         where: {
-          staffId: staffId
-        }
-      })
-    }
+          staffId: staffId,
+        },
+      }),
+    };
   }
 
-  async getCarDetail(staffId: number){
+  async getCarDetail(staffId: number) {
     return await {
       data: await this.prismaService.car.findMany({
         where: {
-          staffId: staffId
-        }
-      })
-    }
+          staffId: staffId,
+        },
+      }),
+    };
   }
 }
