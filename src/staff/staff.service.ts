@@ -108,7 +108,6 @@ export class StaffService {
   }
 
   async getHistory(staffId: number) {
-    console.log('นี่คือ staff id', staffId);
     return await {
       data: await this.prismaService.log.findMany({
         where: {
