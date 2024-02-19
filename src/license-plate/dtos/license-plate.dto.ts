@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform, TransformFnParams } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsOptional } from 'class-validator';
 
 export class InputLicensePlateDto {
   @ApiProperty({
@@ -38,5 +38,6 @@ export class InputLicensePlateDto {
     type: String,
     description:"This is tell the user or admin know that is in or out"
   })
+  @IsOptional()
   arrowDirection: string
 }
