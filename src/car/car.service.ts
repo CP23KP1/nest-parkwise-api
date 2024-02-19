@@ -77,6 +77,7 @@ export class CarService {
         staffId: true,
         year: true,
         licensePlate: true,
+        province: true,
         staff: {
           select: {
             firstname: true,
