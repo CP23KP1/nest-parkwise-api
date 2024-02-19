@@ -168,10 +168,13 @@ export class LicensePlateService {
       },
     });
 
-    if (log.arrowDirection === 'in') {
-      return 'out';
+    try {
+      if (log.arrowDirection === 'in') {
+        return 'out';
+      }
+    } catch {
+      return 'in';
     }
-    return 'in';
   };
 
   updateStaffStatus = async (id: number) => {
