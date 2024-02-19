@@ -160,10 +160,13 @@ export class LicensePlateService {
       },
     });
 
-    if (log.arrowDirection === 'in') {
-      return 'out';
+    try {
+      if (log.arrowDirection === 'in') {
+        return 'out';
+      }
+    } catch {
+      return 'in';
     }
-    return 'in';
   };
 
   updateStaffStatus = async (id: number) => {
@@ -230,7 +233,7 @@ export class LicensePlateService {
     if (direction === 'out') {
       numberHandle = -1;
     }
-    
+
     await this.prismaService.zone
       .findFirst({
         where: {
