@@ -167,6 +167,7 @@ export class LicensePlateService {
     } catch {
       return 'in';
     }
+    return 'in'
   };
 
   updateStaffStatus = async (id: number) => {
