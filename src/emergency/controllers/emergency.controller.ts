@@ -4,10 +4,9 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
   Put,
-  Req,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -58,8 +57,8 @@ export class EmergencyController {
   @ApiBody({ type: CreateEmergencyDto })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  getData() {
-    return this.emergencyService.getData();
+  getData(@Query("search") search: string) {
+    return this.emergencyService.getData(search);
   }
 
   @Put(':id')
