@@ -35,11 +35,22 @@ export class EmergencyService {
     return dataUpdate;
   }
 
-  async getData() {
+  async getData(search?: string) {
+    const whereCondition: any = {
+      deletedAt: null,
+    };
+    if (search) {
+      whereCondition.OR = [
+        { name: { contains: search } },
+        { phoneNumber: { contains: search } },
+      ];
+    }
+
     return this.prismaService.emergency.findMany({
-        orderBy:{
-            createdAt: 'desc'
-        }
+      orderBy: {
+        createdAt: 'desc',
+      },
+      where: whereCondition,
     });
   }
 
@@ -53,9 +64,10 @@ export class EmergencyService {
         })
         .then(() => {
           return HttpStatus.OK;
-        }).catch((err) => {
-            console.log(err)
         })
+        .catch((err) => {
+          console.log(err);
+        });
     } catch {
       throw new HttpException(
         'Something wrong with this',
