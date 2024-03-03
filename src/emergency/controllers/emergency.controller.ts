@@ -23,7 +23,7 @@ import { CustomApiUnauthorized } from 'src/shared/decorators/custom-api-unauthoi
 import { CreateEmergencyDto } from '../dtos/create-emergency.dto';
 import { EmergencyResponse } from '../dtos/emergency-responses';
 
-@Controller('emergency')
+@Controller('emergencies')
 @ApiTags('Emergency')
 export class EmergencyController {
   constructor(private readonly emergencyService: EmergencyService) {}
@@ -43,13 +43,13 @@ export class EmergencyController {
     return this.emergencyService.createEmergency(createEmergencyDto);
   }
 
-  @Delete(":id")
+  @Delete(':id')
   @ApiOperation({ summary: 'Delete Emergency Number' })
   @ApiBody({ type: CreateEmergencyDto })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOkResponse()
-  deleteEmergency(@Param("id") id: string) {
+  deleteEmergency(@Param('id') id: string) {
     return this.emergencyService.deleteEmergencyData(parseInt(id));
   }
 
@@ -59,11 +59,11 @@ export class EmergencyController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   getData() {
-    return this.emergencyService.getData()
+    return this.emergencyService.getData();
   }
 
-  @Put(":id")
-  updateData(@Param("id") id: string, @Body() data: CreateEmergencyDto){
-    return this.emergencyService.editEmergencyData(parseInt(id), data)
+  @Put(':id')
+  updateData(@Param('id') id: string, @Body() data: CreateEmergencyDto) {
+    return this.emergencyService.editEmergencyData(parseInt(id), data);
   }
 }
