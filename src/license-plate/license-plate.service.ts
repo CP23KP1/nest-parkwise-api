@@ -7,6 +7,7 @@ import {
   PutObjectCommand,
 } from '@aws-sdk/client-s3';
 import { error } from 'console';
+import { SignInType } from 'src/shared/types/sign-in-type.type';
 
 const client = new S3Client({ region: 'REGION' });
 
@@ -81,17 +82,22 @@ export class LicensePlateService {
     limit = 10,
     search,
     zoneId,
+    type,
+    id,
+    date,
   }: {
     page?: number;
     limit?: number;
     search?: string;
     zoneId?: number;
+    type?: SignInType;
+    id?: number;
+    date?: string;
   } = {}) {
     try {
       const whereCondition: any = {};
 
       if (search) {
-        console.log('search', search);
         const searchLower = search.toLowerCase();
         whereCondition.OR = [
           { car: { licensePlate: { contains: searchLower } } },
@@ -102,6 +108,17 @@ export class LicensePlateService {
 
       if (zoneId) {
         whereCondition.zoneId = zoneId;
+      }
+
+      if (type === 'staff') {
+        whereCondition.staffId = id;
+      }
+
+      if (date) {
+        whereCondition.createdAt = {
+          gte: new Date(date),
+          lt: new Date(new Date(date).getTime() + 24 * 60 * 60 * 1000),
+        };
       }
 
       const [data, total] = await Promise.all([
@@ -167,7 +184,7 @@ export class LicensePlateService {
     } catch {
       return 'in';
     }
-    return 'in'
+    return 'in';
   };
 
   updateStaffStatus = async (id: number) => {

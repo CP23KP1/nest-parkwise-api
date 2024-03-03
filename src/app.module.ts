@@ -23,7 +23,7 @@ import { EmergencyModule } from './emergency/modules/emergency.module';
     AdminModule,
     ParkingModule,
     UploadModule,
-    EmergencyModule
+    EmergencyModule,
   ],
   controllers: [],
 })

@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 // import { UserService } from 'src/user/user.service';
 import { TokenPayload } from '../types/token-payload.type';
 import { PrismaService } from 'src/prisma.service';
+import { Admin, Staff } from '@prisma/client';
 // import { LoginType } from '../enums/login-type.enum';
 
 @Injectable()
@@ -20,7 +21,25 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: TokenPayload) {
-    return await this.prismaService.admin.findUnique({
+    if (payload.type === 'admin') {
+      const user = await this.prismaService.admin.findUnique({
+        where: {
+          id: payload.id,
+        },
+        select: {
+          id: true,
+          email: true,
+          firstname: true,
+          lastname: true,
+        },
+      });
+      return {
+        ...user,
+        type: payload.type,
+      };
+    }
+
+    const user = await this.prismaService.staff.findUnique({
       where: {
         id: payload.id,
       },
@@ -31,15 +50,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         lastname: true,
       },
     });
-    // if (payload.type === LoginType.USER) {
-    //   data = await this.userService.findById(payload.id, LoginType.USER);
-    // }
-    // if (payload.type === LoginType.EMPLOYEE) {
-    //   data = await this.userService.findById(payload.id, LoginType.EMPLOYEE);
-    // }
-    // return {
-    //   ...data,
-    //   type: payload.type,
-    // };
+
+    return {
+      ...user,
+      type: payload.type,
+    };
   }
 }

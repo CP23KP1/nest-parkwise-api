@@ -17,6 +17,6 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
   }
 
   async validate(payload: TokenPayload) {
-    return { id: payload.id };
+    return { id: payload.id, type: payload.type };
   }
 }

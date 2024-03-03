@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { CarService } from './car.service';
 import { CreateCarDto } from './dto/create-car.dto';
@@ -26,6 +27,7 @@ import { ApiOkResponsePaginated } from 'src/shared/decorators/api-ok-response-pa
 import { CarListResponse } from './responses/car-list.response';
 import { CustomApiUnauthorized } from 'src/shared/decorators/custom-api-unauthoirzed.decorator';
 import { CarResponse } from './responses/car.response';
+import AuthUserRequest from 'src/auth/types/auth-user-request.type';
 
 @Controller('cars')
 @ApiTags('Cars')
@@ -45,6 +47,15 @@ export class CarController {
   })
   create(@Body() createCarDto: CreateCarDto) {
     return this.carService.create(createCarDto);
+  }
+
+  @Get('me')
+  @ApiOperation({ summary: '(Car) Get my cars' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  getMyCars(@Request() req: AuthUserRequest) {
+    const { id } = req.user;
+    return this.carService.getMyCars(+id);
   }
 
   @Get()

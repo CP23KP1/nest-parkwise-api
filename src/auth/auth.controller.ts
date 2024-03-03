@@ -32,7 +32,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/login')
-  @ApiOperation({ summary: 'Login a new user' })
+  @ApiOperation({ summary: 'Logins user' })
   @ApiBody({ type: LoginDto })
   @ApiOkResponse({
     description: 'User logged in successfully',
@@ -54,9 +54,44 @@ export class AuthController {
     },
   })
   login(@Body() loginDto: LoginDto) {
-    return this.authService.validateUser(loginDto.email, loginDto.password);
+    return this.authService.validateUser(
+      loginDto.email,
+      loginDto.password,
+      'admin',
+    );
   }
 
+  @Post('/staff-login')
+  @ApiOperation({ summary: 'Login staff user' })
+  @ApiBody({ type: LoginDto })
+  @ApiOkResponse({
+    description: 'Staff logged in successfully',
+    type: LoginResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Email or password is incorrect',
+    schema: {
+      properties: {
+        statusCode: {
+          type: 'number',
+          example: 401,
+        },
+        message: {
+          type: 'string',
+          example: 'Email or password is incorrect',
+        },
+      },
+    },
+  })
+  loginStaff(@Body() loginDto: LoginDto) {
+    return this.authService.validateUser(
+      loginDto.email,
+      loginDto.password,
+      'staff',
+    );
+  }
+
+  @ApiBody({ type: LoginDto })
   @Post('/register')
   @ApiBody({ type: RegisterDto })
   @ApiOperation({

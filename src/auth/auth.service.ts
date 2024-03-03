@@ -9,6 +9,8 @@ import { PrismaService } from 'src/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { Admin, Staff } from '@prisma/client';
+import { SignInType } from 'src/shared/types/sign-in-type.type';
 @Injectable()
 export class AuthService {
   constructor(
@@ -17,10 +19,23 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async validateUser(email: string, password: string) {
-    const user = await this.prismaService.admin.findUnique({
-      where: { email },
-    });
+  async validateUser(
+    email: string,
+    password: string,
+    type = 'admin' as SignInType,
+  ) {
+    let user = null as Admin | Staff | null;
+    if (type === 'admin' || !type) {
+      user = await this.prismaService.admin.findUnique({
+        where: { email },
+      });
+    }
+
+    if (type === 'staff') {
+      user = await this.prismaService.staff.findFirst({
+        where: { email },
+      });
+    }
     if (!user) {
       throw new UnauthorizedException('Email or password is incorrect');
     }
@@ -31,6 +46,7 @@ export class AuthService {
     delete user.password;
     const signToken = this.signToken(['access_token', 'refresh_token'], {
       id: user.id,
+      type,
     });
     return signToken;
   }
@@ -53,7 +69,7 @@ export class AuthService {
     }
   }
 
-  signToken(tokenList: string[], data: { id: number }) {
+  signToken(tokenList: string[], data: { id: number; type?: SignInType }) {
     return {
       ...(tokenList.includes('access_token') && {
         access_token: this.jwtService.sign(data, {

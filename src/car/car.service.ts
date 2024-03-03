@@ -13,6 +13,14 @@ export class CarService {
     return this.prismaService.car.create({ data: createCarDto });
   }
 
+  async getMyCars(staffId: number) {
+    return this.prismaService.car.findMany({
+      where: {
+        staffId,
+      },
+    });
+  }
+
   async findAll({
     page,
     limit,
@@ -48,7 +56,7 @@ export class CarService {
           },
         },
       ];
-      whereCondition.deletedAt = null
+      whereCondition.deletedAt = null;
     }
 
     const orderCondition: Record<string, 'asc' | 'desc'> = {};

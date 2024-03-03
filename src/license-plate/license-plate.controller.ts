@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Req,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBody,
   ApiOkResponse,
@@ -9,6 +18,8 @@ import {
 import { InputLicensePlateDto } from './dtos/license-plate.dto';
 import { LicensePlateService } from './license-plate.service';
 import { LogResponse } from './responses/license-plate.response';
+import JwtAuthGuard from 'src/auth/jwt/jwt-auth.guard';
+import AuthUserRequest from 'src/auth/types/auth-user-request.type';
 
 @Controller('license-plate')
 @ApiTags('LicensePlate')
@@ -33,17 +44,25 @@ export class LicensePlateController {
   @ApiQuery({ name: 'limit', required: false, example: 10 })
   @ApiQuery({ name: 'search', required: false, example: 'กก2503' })
   @ApiQuery({ name: 'zoneId', required: false, example: 1 })
+  @ApiQuery({ name: 'date', required: false, example: '2021-10-10' })
+  @UseGuards(JwtAuthGuard)
   findAll(
+    @Request() req: AuthUserRequest,
     @Query('page') page = 1,
     @Query('limit') limit = 10,
     @Query('search') search: string,
     @Query('zoneId') zoneId: number,
+    @Query('date') date: string,
   ) {
+    const { id, type } = req.user;
     return this.licensePlateService.get({
       page: +page,
       limit: +limit,
       search,
       zoneId,
+      type,
+      id,
+      date,
     });
   }
 }

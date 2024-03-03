@@ -63,6 +63,7 @@ export class EmergencyController {
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   updateData(@Param('id') id: string, @Body() data: CreateEmergencyDto) {
     return this.emergencyService.editEmergencyData(parseInt(id), data);
   }
