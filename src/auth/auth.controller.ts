@@ -5,10 +5,13 @@ import {
   Get,
   UseGuards,
   Request,
+  HttpStatus,
+  Response,
+  HttpCode,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
+import { LoginDto, StaffEmailCheckDto } from './dto/login.dto';
+import { RegisterDto, UpdateStaffPasswordDto } from './dto/register.dto';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -89,6 +92,38 @@ export class AuthController {
       loginDto.password,
       'staff',
     );
+  }
+
+  @Post('/staff-email-check')
+  @ApiOperation({ summary: 'Check if staff email exists' })
+  @HttpCode(200)
+  staffEmailCheck(@Body() loginDto: StaffEmailCheckDto) {
+    return this.authService.staffEmailCheck(loginDto.email);
+  }
+
+  @ApiBody({ type: RegisterDto })
+  @Post('/staff-update-password')
+  @ApiOperation({ summary: 'Update staff password' })
+  @ApiOkResponse({
+    description: 'Staff password updated successfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Password already set',
+    schema: {
+      properties: {
+        statusCode: {
+          type: 'number',
+          example: 401,
+        },
+        message: {
+          type: 'string',
+          example: 'Password already set',
+        },
+      },
+    },
+  })
+  updateStaffPassword(@Body() updateStaffPasswordDto: UpdateStaffPasswordDto) {
+    return this.authService.updateStaffPassword(updateStaffPasswordDto);
   }
 
   @ApiBody({ type: LoginDto })

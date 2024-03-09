@@ -3,16 +3,29 @@ import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
 import { PrismaService } from 'src/prisma.service';
 import { metaDataConvert } from 'src/utils/converter.util';
+import { AuthService } from 'src/auth/auth.service';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class StaffService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private authService: AuthService,
+    private mailService: MailService,
+  ) {}
 
-  create(createStaffDto: CreateStaffDto) {
+  async create(createStaffDto: CreateStaffDto) {
     createStaffDto.status = false;
-    return this.prismaService.staff.create({
+    const staff = await this.prismaService.staff.create({
       data: createStaffDto,
     });
+    const { token } = this.authService.signTokenType('confirm_email', {
+      id: staff.id,
+    });
+
+    await this.mailService.sendEmailVerification(staff, token);
+
+    return staff;
   }
 
   async findAll({
@@ -100,24 +113,24 @@ export class StaffService {
     };
   }
 
-  async getHistory(staffId: number){
-    console.log('นี่คือ staff id', staffId)
+  async getHistory(staffId: number) {
+    console.log('นี่คือ staff id', staffId);
     return await {
       data: await this.prismaService.log.findMany({
         where: {
-          staffId: staffId
-        }
-      })
-    }
+          staffId: staffId,
+        },
+      }),
+    };
   }
 
-  async getCarDetail(staffId: number){
+  async getCarDetail(staffId: number) {
     return await {
       data: await this.prismaService.car.findMany({
         where: {
-          staffId: staffId
-        }
-      })
-    }
+          staffId: staffId,
+        },
+      }),
+    };
   }
 }

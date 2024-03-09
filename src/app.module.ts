@@ -10,6 +10,7 @@ import { ParkingModule } from './parking/parking.module';
 import { UploadModule } from './upload/upload.module';
 import { ConfigModule } from '@nestjs/config';
 import { EmergencyModule } from './emergency/modules/emergency.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { EmergencyModule } from './emergency/modules/emergency.module';
     ParkingModule,
     UploadModule,
     EmergencyModule,
+    MailModule,
   ],
   controllers: [],
 })

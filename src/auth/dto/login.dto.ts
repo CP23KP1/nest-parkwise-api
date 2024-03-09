@@ -20,3 +20,14 @@ export class LoginDto {
   @IsNotEmpty()
   password: string;
 }
+
+export class StaffEmailCheckDto {
+  @ApiProperty({
+    type: 'email',
+    description: 'The email of the user',
+    example: 'john.doe@gmail.com',
+  })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+}

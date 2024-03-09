@@ -10,3 +10,5 @@ export const kApiUnauthorizedResponseSchema = {
     },
   },
 };
+
+export const APP_NAME = 'Parkwise Management';

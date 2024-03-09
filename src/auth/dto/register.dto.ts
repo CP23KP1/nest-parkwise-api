@@ -7,6 +7,30 @@ import {
   MinLength,
 } from 'class-validator';
 
+export class UpdateStaffPasswordDto {
+  @ApiProperty({
+    type: 'string',
+    description: 'The password of the user',
+    example: '',
+  })
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(8)
+  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+    message: 'password too weak',
+  })
+  password: string;
+
+  @ApiProperty({
+    type: 'string',
+    description: 'JWT Token of the user',
+    example: '',
+  })
+  @IsString()
+  @IsNotEmpty()
+  token: string;
+}
+
 export class RegisterDto {
   @ApiProperty({
     type: 'email',
