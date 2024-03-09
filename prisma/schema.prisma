@@ -75,6 +75,18 @@ model Device {
   @@map("device")
 }
 
+model Emergency {
+  id          Int       @id @default(autoincrement())
+  name        String
+  phoneNumber String
+  active      Boolean?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@map("emergency")
+}
+
 model Log {
 
   id             Int       @id @default(autoincrement())
@@ -122,6 +134,7 @@ model Staff {
   position    StaffPosition @default(Other)
   status      Boolean       @default(false)
   imageUrl    String?
+  password    String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   deletedAt   DateTime?

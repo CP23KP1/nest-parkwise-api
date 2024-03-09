@@ -85,6 +85,8 @@ export class CarService {
         staffId: true,
         year: true,
         licensePlate: true,
+        province: true,
+        imageUrl: true,
         staff: {
           select: {
             firstname: true,
@@ -107,6 +109,18 @@ export class CarService {
     if (!car) {
       throw new NotFoundException('Car not found');
     }
+    return car;
+  }
+
+  async findCarByMe(staffId: number) {
+    const car = await this.prismaService.car.findFirst({
+      where: { staffId, deletedAt: null },
+    });
+
+    if (!car) {
+      throw new NotFoundException('Car not found');
+    }
+
     return car;
   }
 

@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateZoneDto {
   @ApiProperty({
@@ -66,6 +72,7 @@ export class CreateZoneDto {
   longitude: number;
 
   @ApiProperty({ type: String })
+  @IsOptional()
   @IsString()
   imageUrl: string;
 }

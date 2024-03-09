@@ -1,0 +1,11 @@
+model Emergency {
+  id          Int       @id @default(autoincrement())
+  name        String
+  phoneNumber String
+  active      Boolean?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@map("emergency")
+}

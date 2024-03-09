@@ -96,6 +96,20 @@ export class CarController {
     });
   }
 
+  @Get('/me')
+  @ApiOperation({ summary: '(Car) Get car by user id' })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'Return the car by id',
+    type: CarResponse,
+  })
+  @CustomApiUnauthorized()
+  findCarByMe(@Request() req: AuthUserRequest) {
+    if (req.user.type === 'admin') throw new Error('Admin cannot have a car');
+    return this.carService.findCarByMe(req.user.id);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: '(Car) Get by car id' })
   @ApiParam({

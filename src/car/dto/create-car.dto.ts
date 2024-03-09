@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateCarDto {
   @ApiProperty({
@@ -51,6 +57,7 @@ export class CreateCarDto {
   province: string;
 
   @ApiProperty({ type: String })
+  @IsOptional()
   @IsString()
   imageUrl: string;
 }

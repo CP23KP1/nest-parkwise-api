@@ -4,6 +4,7 @@ export default interface AuthUserRequest extends Request {
   user: {
     id: number;
     type: SignInType;
+    staffId: number;
     email: string;
     firstname: string;
     lastname: string;
