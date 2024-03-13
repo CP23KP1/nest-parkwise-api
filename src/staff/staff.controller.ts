@@ -25,6 +25,7 @@ import JwtAuthGuard from 'src/auth/jwt/jwt-auth.guard';
 import { ApiOkResponsePaginated } from 'src/shared/decorators/api-ok-response-paginated.decorator';
 import { CustomApiUnauthorized } from 'src/shared/decorators/custom-api-unauthoirzed.decorator';
 import { StaffResponse } from './responses/staff.response';
+import { Roles } from 'src/auth/jwt/roles.guard';
 
 @Controller('staffs')
 @ApiTags('Staffs')
@@ -41,6 +42,7 @@ export class StaffController {
   })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
+  @Roles('admin')
   create(@Body() createStaffDto: CreateStaffDto) {
     return this.staffService.create(createStaffDto);
   }
@@ -118,7 +120,7 @@ export class StaffController {
     return this.staffService.remove(+id);
   }
 
-  @Get("active")
+  @Get('active')
   @ApiOperation({ summary: '(Staff) Get Active Staff' })
   @ApiOkResponse({
     description: 'Return the numbers of active staff',
@@ -131,23 +133,23 @@ export class StaffController {
     return this.staffService.getActive();
   }
 
-  @Get("history")
-  @ApiOperation({ summary: "Get History"})
+  @Get('history')
+  @ApiOperation({ summary: 'Get History' })
   @ApiOkResponse({
-    description: "Return the history of staff that used the system"
+    description: 'Return the history of staff that used the system',
   })
   @ApiParam({ name: 'staffId', required: true, type: Number, example: 1 })
   @CustomApiUnauthorized()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   getHistory(staffId: number) {
-    return this.staffService.getHistory(staffId)
+    return this.staffService.getHistory(staffId);
   }
 
-  @Get("car-detail")
-  @ApiOperation({ summary: "Get History"})
+  @Get('car-detail')
+  @ApiOperation({ summary: 'Get History' })
   @ApiOkResponse({
-    description: "Return the history of staff that used the system"
+    description: 'Return the history of staff that used the system',
   })
   @ApiParam({ name: 'staffId', required: true, type: Number, example: 1 })
   @CustomApiUnauthorized()
@@ -156,5 +158,4 @@ export class StaffController {
   getCarDetail(staffId: number) {
     return this.staffService.getCarDetail(staffId);
   }
-
 }

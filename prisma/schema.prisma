@@ -1,4 +1,4 @@
-//🧩Don't Edit this file.✨Generated in Sat Mar 09 2024 12:05:24 GMT+0700 (Indochina Time)✨
+//🧩Don't Edit this file.✨Generated in Wed Mar 13 2024 11:27:31 GMT+0700 (Indochina Time)✨
 model Admin {
 
   id        Int       @id @default(autoincrement())
@@ -125,21 +125,22 @@ model Parking {
 
 model Staff {
 
-  id          Int           @id @default(autoincrement())
-  firstname   String
-  lastname    String
-  password    String?
-  email       String
-  phoneNumber String
-  position    StaffPosition @default(Other)
-  status      Boolean       @default(false)
-  imageUrl    String?
-  password    String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  deletedAt   DateTime?
-  cars        Car[]
-  Log         Log[]
+  id                        Int           @id @default(autoincrement())
+  firstname                 String
+  lastname                  String
+  email                     String
+  phoneNumber               String
+  position                  StaffPosition @default(Other)
+  status                    Boolean       @default(false)
+  imageUrl                  String?
+  password                  String?
+  createdAt                 DateTime      @default(now())
+  updatedAt                 DateTime      @updatedAt
+  deletedAt                 DateTime?
+  requestPasswordResetToken String?       @db.Text
+  isVerifiedEmail           Boolean       @default(false)
+  cars                      Car[]
+  Log                       Log[]
 
   @@map("staff")
 }

@@ -8,6 +8,8 @@ import {
   HttpStatus,
   Response,
   HttpCode,
+  Query,
+  Param,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, StaffEmailCheckDto } from './dto/login.dto';
@@ -101,7 +103,7 @@ export class AuthController {
     return this.authService.staffEmailCheck(loginDto.email);
   }
 
-  @ApiBody({ type: RegisterDto })
+  @ApiBody({ type: UpdateStaffPasswordDto })
   @Post('/staff-update-password')
   @ApiOperation({ summary: 'Update staff password' })
   @ApiOkResponse({
@@ -124,6 +126,31 @@ export class AuthController {
   })
   updateStaffPassword(@Body() updateStaffPasswordDto: UpdateStaffPasswordDto) {
     return this.authService.updateStaffPassword(updateStaffPasswordDto);
+  }
+
+  @ApiBody({ type: RegisterDto })
+  @Post('/staff-reset-password')
+  @ApiOperation({ summary: 'Reset staff password' })
+  @ApiOkResponse({
+    description: 'Staff password reset successfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Password already set',
+    schema: {
+      properties: {
+        statusCode: {
+          type: 'number',
+          example: 401,
+        },
+        message: {
+          type: 'string',
+          example: 'Password already set',
+        },
+      },
+    },
+  })
+  resetStaffPassword(@Body() updateStaffPasswordDto: UpdateStaffPasswordDto) {
+    return this.authService.resetStaffPassword(updateStaffPasswordDto);
   }
 
   @ApiBody({ type: LoginDto })
@@ -179,7 +206,6 @@ export class AuthController {
   })
   async refreshToken(@Request() req: AuthUserRequest) {
     const { access_token } = this.authService.signToken(['access_token'], {
-      email: req.user.email,
       id: req.user.id,
       type: req.user.type,
     });
@@ -199,5 +225,25 @@ export class AuthController {
   @ApiBearerAuth()
   me(@Request() req: AuthUserRequest) {
     return req.user;
+  }
+
+  @Get('/verify-token')
+  @ApiOperation({ summary: 'Verify the token by request' })
+  @ApiOkResponse({
+    description: 'Token verified successfully',
+  })
+  @CustomApiUnauthorized()
+  verifyToken(@Query('token') token: string) {
+    return this.authService.verifyTokenType(token);
+  }
+
+  @Post('/forgot-password')
+  @ApiOperation({ summary: 'Forgot password' })
+  @ApiOkResponse({
+    description: 'Email sent successfully',
+  })
+  @CustomApiUnauthorized()
+  forgotPassword(@Body('email') email: string) {
+    return this.authService.forgotPassword(email);
   }
 }

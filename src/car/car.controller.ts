@@ -49,15 +49,6 @@ export class CarController {
     return this.carService.create(createCarDto);
   }
 
-  @Get('me')
-  @ApiOperation({ summary: '(Car) Get my cars' })
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  getMyCars(@Request() req: AuthUserRequest) {
-    const { id } = req.user;
-    return this.carService.getMyCars(+id);
-  }
-
   @Get()
   @ApiOperation({ summary: '(Car) Get all cars' })
   @ApiQuery({

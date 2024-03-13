@@ -16,10 +16,13 @@ export class StaffService {
 
   async create(createStaffDto: CreateStaffDto) {
     createStaffDto.status = false;
+    delete createStaffDto.password;
     const staff = await this.prismaService.staff.create({
       data: createStaffDto,
     });
+
     const { token } = this.authService.signTokenType('confirm_email', {
+      email: staff.email,
       id: staff.id,
     });
 

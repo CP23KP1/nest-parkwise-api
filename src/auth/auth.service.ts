@@ -11,12 +11,14 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Admin, Staff } from '@prisma/client';
 import { SignInType, TokenType } from 'src/shared/types/sign-in-type.type';
+import { MailService } from 'src/mail/mail.service';
 @Injectable()
 export class AuthService {
   constructor(
     private prismaService: PrismaService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private mailService: MailService,
   ) {}
 
   async staffEmailCheck(email: string) {
@@ -45,6 +47,35 @@ export class AuthService {
     };
   }
 
+  async resetStaffPassword(updateStaffPasswordDto: UpdateStaffPasswordDto) {
+    const { id, type } = await this.verifyTokenType(
+      updateStaffPasswordDto.token,
+    );
+    if (!id) {
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    if (type !== 'forget_password') {
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    const hashedPassword = await argon2.hash(updateStaffPasswordDto.password);
+
+    const staff = await this.prismaService.staff.update({
+      where: {
+        id,
+      },
+      data: {
+        password: hashedPassword,
+        requestPasswordResetToken: null,
+      },
+    });
+
+    delete staff.password;
+
+    return staff;
+  }
+
   async updateStaffPassword(updateStaffPasswordDto: UpdateStaffPasswordDto) {
     const { id } = this.jwtService.verify(updateStaffPasswordDto.token, {
       secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
@@ -56,6 +87,7 @@ export class AuthService {
       },
       data: {
         password: hashedPassword,
+        isVerifiedEmail: true,
       },
     });
     delete staff.password;
@@ -112,31 +144,97 @@ export class AuthService {
     }
   }
 
-  signTokenType(tokenType: TokenType, data: { id: number }): { token: string } {
+  async forgotPassword(email: string) {
+    try {
+      const staff = await this.prismaService.staff.findFirst({
+        where: { email },
+      });
+      if (!staff) {
+        throw new UnauthorizedException('Email not found');
+      }
+      const { token } = this.signTokenType(
+        'forget_password',
+        {
+          email: staff.email,
+          id: staff.id,
+        },
+        '15m',
+      );
+
+      await this.mailService.sendForgotPassword(staff, token);
+
+      await this.prismaService.staff.update({
+        where: {
+          id: staff.id,
+        },
+        data: {
+          requestPasswordResetToken: token,
+        },
+      });
+
+      return {
+        status: 200,
+        message: 'Email sent successfully',
+      };
+    } catch (error) {
+      throw new UnauthorizedException('Email not found');
+    }
+  }
+
+  async verifyTokenType(token: string) {
+    try {
+      const payload = this.jwtService.verify(token, {
+        secret: `${this.configService.get(
+          'JWT_ACCESS_TOKEN_SECRET',
+        )}${this.configService.get('JWT_REFRESH_TOKEN_SECRET')}`,
+      });
+
+      if (payload.type === 'forget_password') {
+        const staff = await this.prismaService.staff.findUnique({
+          where: {
+            id: payload.id,
+          },
+          select: {
+            id: true,
+            requestPasswordResetToken: true,
+          },
+        });
+
+        if (staff.requestPasswordResetToken !== token) {
+          throw new UnauthorizedException('Invalid token');
+        }
+
+        if (!staff.requestPasswordResetToken) {
+          throw new UnauthorizedException('Invalid token');
+        }
+      }
+
+      return payload;
+    } catch (error) {
+      throw new UnauthorizedException('Invalid token');
+    }
+  }
+
+  signTokenType(
+    tokenType: TokenType,
+    data: { email: string; id: number },
+    expiresIn = '3d',
+  ): { token: string } {
     return {
       token: this.jwtService.sign(
         {
           ...data,
+          email: data.email,
           type: tokenType,
         },
         {
           secret: `${this.configService.get(
             'JWT_ACCESS_TOKEN_SECRET',
           )}${this.configService.get('JWT_REFRESH_TOKEN_SECRET')}`,
-          expiresIn: `${this.configService.get(
-            'JWT_ACCESS_TOKEN_EXPIRATION_TIME',
-          )}`,
+          expiresIn: expiresIn,
         },
       ),
     };
-  }
-
-  verifyTokenType(token: string) {
-    return this.jwtService.verify(token, {
-      secret: `${this.configService.get(
-        'JWT_ACCESS_TOKEN_SECRET',
-      )}${this.configService.get('JWT_REFRESH_TOKEN_SECRET')}`,
-    });
   }
 
   signToken(tokenList: string[], data: { id: number; type?: SignInType }) {
