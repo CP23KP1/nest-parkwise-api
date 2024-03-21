@@ -68,6 +68,7 @@ export class AuthService {
       data: {
         password: hashedPassword,
         requestPasswordResetToken: null,
+        isVerifiedEmail: true,
       },
     });
 

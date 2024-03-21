@@ -45,7 +45,6 @@ export class LicensePlateController {
   @ApiQuery({ name: 'search', required: false, example: 'กก2503' })
   @ApiQuery({ name: 'zoneId', required: false, example: 1 })
   @ApiQuery({ name: 'date', required: false, example: '2021-10-10' })
-  @UseGuards(JwtAuthGuard)
   findAll(
     @Request() req: AuthUserRequest,
     @Query('page') page = 1,
