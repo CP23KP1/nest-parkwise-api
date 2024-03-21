@@ -1,9 +1,8 @@
 //🧩Don't Edit this file.✨Generated in Wed Mar 13 2024 11:27:31 GMT+0700 (Indochina Time)✨
 model Admin {
-
   id        Int       @id @default(autoincrement())
-  email     String    @unique
-  password  String?
+  email     String    @unique @db.VarChar(80)
+  password  String?   @db.VarChar(80)
   firstname String    @db.VarChar(255)
   lastname  String    @db.VarChar(255)
   createdAt DateTime  @default(now())
@@ -23,7 +22,6 @@ datasource db {
 }
 
 model CarGuest {
-
   id           Int       @id @default(autoincrement())
   licensePlate String
   color        String
@@ -39,15 +37,14 @@ model CarGuest {
 }
 
 model Car {
-
   id           Int       @id @default(autoincrement())
-  licensePlate String
-  color        String
-  brand        String
-  model        String
+  licensePlate String    @db.VarChar(12)
+  color        String    @db.VarChar(40)
+  brand        String    @db.VarChar(40)
+  model        String    @db.VarChar(80)
   year         Int
-  province     String?
-  imageUrl     String?
+  province     String?   @db.VarChar(40)
+  imageUrl     String?   @db.VarChar(255)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
@@ -59,13 +56,12 @@ model Car {
 }
 
 model Device {
-
   id           Int       @id @default(autoincrement())
-  name         String
-  description  String?
-  brand        String?
+  name         String    @db.VarChar(255)
+  description  String?   @db.VarChar(255)
+  brand        String?   @db.VarChar(255)
   price        Float     @default(0)
-  deviceSerial String?
+  deviceSerial String?   @db.VarChar(255)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
@@ -75,20 +71,8 @@ model Device {
   @@map("device")
 }
 
-model Emergency {
-  id          Int       @id @default(autoincrement())
-  name        String
-  phoneNumber String
-  active      Boolean?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
-
-  @@map("emergency")
-}
 
 model Log {
-
   id             Int       @id @default(autoincrement())
   zoneId         Int
   zone           Zone      @relation(fields: [zoneId], references: [id])
@@ -98,8 +82,8 @@ model Log {
   car            Car?      @relation(fields: [carId], references: [id])
   carGuestId     Int?
   carGuest       CarGuest? @relation(fields: [carGuestId], references: [id])
-  licenseUrl     String?   @db.Text
-  arrowDirection String?
+  arrowDirection String?   @db.VarChar(4)
+  licenseUrl     String?   @db.VarChar(255)
   timestamp      DateTime  @default(now())
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -109,10 +93,9 @@ model Log {
 }
 
 model Parking {
-
   id          Int       @id @default(autoincrement())
-  name        String
-  description String?
+  name        String    @db.VarChar(255)
+  description String?   @db.VarChar(255)
   amount      Int       @default(0)
   zone        Zone      @relation(fields: [zoneId], references: [id])
   zoneId      Int
@@ -124,23 +107,19 @@ model Parking {
 }
 
 model Staff {
-
-  id                        Int           @id @default(autoincrement())
-  firstname                 String
-  lastname                  String
-  email                     String
-  phoneNumber               String
-  position                  StaffPosition @default(Other)
-  status                    Boolean       @default(false)
-  imageUrl                  String?
-  password                  String?
-  createdAt                 DateTime      @default(now())
-  updatedAt                 DateTime      @updatedAt
-  deletedAt                 DateTime?
-  requestPasswordResetToken String?       @db.Text
-  isVerifiedEmail           Boolean       @default(false)
-  cars                      Car[]
-  Log                       Log[]
+  id          Int           @id @default(autoincrement())
+  firstname   String        @db.VarChar(255)
+  lastname    String        @db.VarChar(255)
+  email       String        @db.VarChar(80)
+  phoneNumber String        @db.VarChar(20)
+  position    StaffPosition @default(Other)
+  status      Boolean       @default(false)
+  imageUrl    String?       @db.VarChar(255)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  deletedAt   DateTime?
+  cars        Car[]
+  Log         Log[]
 
   @@map("staff")
 }
@@ -155,16 +134,15 @@ enum StaffPosition {
 }
 
 model Zone {
-
   id              Int       @id @default(autoincrement())
-  name            String
-  description     String?
+  name            String    @db.VarChar(255)
+  description     String?   @db.VarChar(255)
   occupancy       Int
   maximumCapacity Int
-  address         String?
+  address         String?   @db.VarChar(255)
   latitude        Float?
   longitude       Float?
-  imageUrl        String?
+  imageUrl        String?   @db.VarChar(255)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   deletedAt       DateTime?
@@ -173,4 +151,16 @@ model Zone {
   Log             Log[]
 
   @@map("zone")
+}
+
+model Emergency {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(255)
+  phoneNumber String    @db.VarChar(20)
+  active      Boolean?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@map("emergency")
 }
