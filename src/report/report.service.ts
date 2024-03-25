@@ -39,8 +39,43 @@ export class ReportService {
     };
   }
 
-  async findByTopTenParkingZone() {
+  async findByDays(month: number, year: number) {
     const logs = await this.prismaService.log.findMany({
+      where: {
+        timestamp: {
+          gte: new Date(year, month - 1, 1),
+          lte: new Date(year, month, 0),
+        },
+      },
+    });
+
+    const dayCount = new Map();
+    logs.forEach((log) => {
+      const date = new Date(log.timestamp).getDate();
+      if (dayCount.has(date)) {
+        dayCount.set(date, dayCount.get(date) + 1);
+      } else {
+        dayCount.set(date, 1);
+      }
+    });
+
+    return Array.from(dayCount.keys()).map((date) => ({
+      date,
+      count: dayCount.get(date),
+    }));
+  }
+
+  async findByTopTenParkingZone(
+    timeStart: string = new Date().toISOString(),
+    timeEnd: string = new Date().toISOString(),
+  ) {
+    const logs = await this.prismaService.log.findMany({
+      where: {
+        timestamp: {
+          gte: new Date(timeStart),
+          lte: new Date(timeEnd),
+        },
+      },
       include: {
         zone: true,
       },
