@@ -22,7 +22,7 @@ export class CreateZoneDto {
     description: 'Zone description',
     default: 'Zone 1 description',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   description: string;
 

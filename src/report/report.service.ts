@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
 import { PrismaService } from 'src/prisma.service';
+import dayjs from 'dayjs';
+import { myDayjs } from 'src/utils/my-dayjs.util';
 
 @Injectable()
 export class ReportService {
@@ -17,6 +19,7 @@ export class ReportService {
           gte: new Date(timeStart),
           lte: new Date(timeEnd),
         },
+        arrowDirection: 'in',
       },
     });
 
@@ -43,25 +46,38 @@ export class ReportService {
     const logs = await this.prismaService.log.findMany({
       where: {
         timestamp: {
-          gte: new Date(year, month - 1, 1),
-          lte: new Date(year, month, 0),
+          gte: myDayjs()
+            .month(month - 1)
+            .year(year)
+            .startOf('month')
+            .toDate(),
+          lte: myDayjs()
+            .month(month - 1)
+            .year(year)
+            .endOf('month')
+            .toDate(),
         },
+        arrowDirection: 'in',
+      },
+      orderBy: {
+        timestamp: 'desc',
       },
     });
 
     const dayCount = new Map();
+
     logs.forEach((log) => {
-      const date = new Date(log.timestamp).getDate();
-      if (dayCount.has(date)) {
-        dayCount.set(date, dayCount.get(date) + 1);
+      const day = myDayjs(log.timestamp).format('dddd');
+      if (dayCount.has(day)) {
+        dayCount.set(day, dayCount.get(day) + 1);
       } else {
-        dayCount.set(date, 1);
+        dayCount.set(day, 1);
       }
     });
 
-    return Array.from(dayCount.keys()).map((date) => ({
-      date,
-      count: dayCount.get(date),
+    return Array.from(dayCount.keys()).map((day) => ({
+      day,
+      count: dayCount.get(day),
     }));
   }
 
@@ -75,6 +91,7 @@ export class ReportService {
           gte: new Date(timeStart),
           lte: new Date(timeEnd),
         },
+        arrowDirection: 'in',
       },
       include: {
         zone: true,

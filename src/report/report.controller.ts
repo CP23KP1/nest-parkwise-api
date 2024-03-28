@@ -7,13 +7,15 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import JwtAuthGuard from 'src/auth/jwt/jwt-auth.guard';
 
-@Controller('report')
+@Controller('reports')
 @ApiTags('Report')
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}
@@ -22,6 +24,7 @@ export class ReportController {
   @ApiOperation({ summary: 'Find top ten time range' })
   @ApiQuery({ name: 'timeStart', required: false, example: '2021-10-10' })
   @ApiQuery({ name: 'timeEnd', required: false, example: '2021-10-10' })
+  @UseGuards(JwtAuthGuard)
   findByTopTimeRange(
     @Query('timeStart') timeStart: string,
     @Query('timeEnd') timeEnd: string,
@@ -45,6 +48,7 @@ export class ReportController {
   @ApiOperation({ summary: 'Find top ten parking zone' })
   @ApiQuery({ name: 'timeStart', required: false, example: '2021-10-10' })
   @ApiQuery({ name: 'timeEnd', required: false, example: '2021-10-10' })
+  @UseGuards(JwtAuthGuard)
   findByTopTenParkingZone(
     @Query('timeStart') timeStart: string,
     @Query('timeEnd') timeEnd: string,
@@ -66,6 +70,7 @@ export class ReportController {
   @ApiOperation({ summary: '' })
   @ApiQuery({ name: 'month', required: false, example: '10' })
   @ApiQuery({ name: 'year', required: false, example: '2021' })
+  @UseGuards(JwtAuthGuard)
   findByDays(@Query('month') month: number, @Query('year') year: number) {
     month = month || new Date().getMonth() + 1;
     year = year || new Date().getFullYear();

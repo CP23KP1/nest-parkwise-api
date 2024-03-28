@@ -40,6 +40,7 @@
     "bard-ai": "^2.0.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "dayjs": "^1.11.10",
     "fastify-formbody": "^5.3.0",
     "fastify-multer": "^2.0.3",
     "fix-esm": "^1.0.1",
