@@ -35,7 +35,7 @@ export class EmergencyService {
     return dataUpdate;
   }
 
-  async getData(search?: string) {
+  async getData(search?: string, isCustomer?: boolean) {
     const whereCondition: any = {
       deletedAt: null,
     };
@@ -44,6 +44,10 @@ export class EmergencyService {
         { name: { contains: search } },
         { phoneNumber: { contains: search } },
       ];
+    }
+
+    if (isCustomer) {
+      whereCondition.active = true;
     }
 
     return this.prismaService.emergency.findMany({

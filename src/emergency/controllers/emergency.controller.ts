@@ -57,8 +57,17 @@ export class EmergencyController {
   @ApiBody({ type: CreateEmergencyDto })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  getData(@Query("search") search: string) {
+  getData(@Query('search') search: string) {
     return this.emergencyService.getData(search);
+  }
+
+  @Get('/by-customer')
+  @ApiOperation({ summary: 'Get Data' })
+  @ApiBody({ type: CreateEmergencyDto })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  getDataByCustomer(@Query('search') search: string) {
+    return this.emergencyService.getData(search, true);
   }
 
   @Put(':id')

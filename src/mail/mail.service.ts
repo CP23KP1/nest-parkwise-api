@@ -27,6 +27,9 @@ export class MailService {
   async sendForgotPassword(staff: Staff, token: string) {
     try {
       const { email, firstname, lastname } = staff;
+      console.log('email', email);
+      console.log('firstname', firstname);
+      console.log('lastname', lastname);
       await this.mailerService.sendMail({
         to: email,
         subject: 'รีเซ็ตรหัสผ่านของคุณ',
@@ -38,6 +41,8 @@ export class MailService {
           staffName: `${firstname} ${lastname}`,
         },
       });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
