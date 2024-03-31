@@ -10,6 +10,7 @@ import {
   HttpCode,
   Query,
   Param,
+  BadRequestException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, StaffEmailCheckDto } from './dto/login.dto';
@@ -244,6 +245,7 @@ export class AuthController {
   })
   @CustomApiUnauthorized()
   forgotPassword(@Body('email') email: string) {
+    if (!email) throw new BadRequestException('Email is required');
     return this.authService.forgotPassword(email);
   }
 }
