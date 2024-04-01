@@ -98,24 +98,54 @@ export class ReportService {
       },
     });
 
-    const zoneCount = new Map();
-    logs.forEach((log) => {
-      if (zoneCount.has(log.zoneId)) {
-        zoneCount.set(log.zoneId, zoneCount.get(log.zoneId) + 1);
-      } else {
-        zoneCount.set(log.zoneId, 1);
+    //* Response should be
+
+    /*
+      Example: 
+
+      [
+        {
+          zoneName: 'Zone 1',
+          morning: 10,
+          afternoon: 20,
+          evening: 30,
+          total: 60,
+        }
+      ]
+    */
+
+    const zones = [];
+
+    for (let i = 0; i < logs.length; i++) {
+      const log = logs[i];
+      const zoneId = log.zone.id;
+      const zone = log.zone.name;
+      const hour = new Date(log.timestamp).getHours();
+      let index = zones.findIndex((zone) => zone.id === zoneId);
+
+      if (index === -1) {
+        zones.push({
+          id: log.zoneId,
+          zoneName: zone,
+          morning: 0,
+          afternoon: 0,
+          evening: 0,
+          total: 0,
+        });
+        index = zones.length - 1;
       }
-    });
 
-    const sortedZoneCount = new Map(
-      [...zoneCount.entries()].sort((a, b) => b[1] - a[1]),
-    );
+      if (hour >= 6 && hour < 12) {
+        zones[index].morning++;
+      } else if (hour >= 12 && hour < 18) {
+        zones[index].afternoon++;
+      } else {
+        zones[index].evening++;
+      }
 
-    const topTen = Array.from(sortedZoneCount.keys()).slice(0, 10);
+      zones[index].total++;
+    }
 
-    return topTen.map((zoneId) => ({
-      zoneId,
-      count: zoneCount.get(zoneId),
-    }));
+    return zones.sort((a, b) => b.total - a.total).slice(0, 10);
   }
 }
