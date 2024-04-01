@@ -60,18 +60,12 @@ export class EmergencyService {
 
   async deleteEmergencyData(id: number) {
     try {
-      const emergencyData = await this.prismaService.emergency
-        .delete({
-          where: {
-            id: id,
-          },
-        })
-        .then(() => {
-          return HttpStatus.OK;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      const emergencyData = await this.prismaService.emergency.delete({
+        where: {
+          id: id,
+        },
+      });
+      return emergencyData;
     } catch {
       throw new HttpException(
         'Something wrong with this',

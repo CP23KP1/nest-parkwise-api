@@ -12,8 +12,19 @@ import {
 import { ReportService } from './report.service';
 import { CreateReportDto } from './dto/create-report.dto';
 import { UpdateReportDto } from './dto/update-report.dto';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import JwtAuthGuard from 'src/auth/jwt/jwt-auth.guard';
+import {
+  ByDaysReportResponse,
+  TopTenParkingZoneReportResponse,
+} from './responses/report.response';
+import { CustomApiUnauthorized } from 'src/shared/decorators/custom-api-unauthoirzed.decorator';
 
 @Controller('reports')
 @ApiTags('Report')
@@ -49,6 +60,13 @@ export class ReportController {
   @ApiQuery({ name: 'timeStart', required: false, example: '2021-10-10' })
   @ApiQuery({ name: 'timeEnd', required: false, example: '2021-10-10' })
   @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({
+    status: 200,
+    description: 'Find top ten parking zone is successfully',
+    type: [TopTenParkingZoneReportResponse],
+  })
+  @CustomApiUnauthorized()
+  @ApiBearerAuth()
   findByTopTenParkingZone(
     @Query('timeStart') timeStart: string,
     @Query('timeEnd') timeEnd: string,
@@ -71,6 +89,13 @@ export class ReportController {
   @ApiQuery({ name: 'month', required: false, example: '10' })
   @ApiQuery({ name: 'year', required: false, example: '2021' })
   @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({
+    status: 200,
+    description: 'Find report by days is successfully',
+    type: [ByDaysReportResponse],
+  })
+  @CustomApiUnauthorized()
+  @ApiBearerAuth()
   findByDays(@Query('month') month: number, @Query('year') year: number) {
     month = month || new Date().getMonth() + 1;
     year = year || new Date().getFullYear();
