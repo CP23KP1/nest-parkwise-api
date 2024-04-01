@@ -5,6 +5,8 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Max,
+  Min,
 } from 'class-validator';
 
 export class CreateZoneDto {
@@ -33,6 +35,8 @@ export class CreateZoneDto {
   })
   @IsInt()
   @IsNotEmpty()
+  @Min(0)
+  @Max(1000000)
   occupancy: number;
 
   @ApiProperty({
@@ -42,6 +46,8 @@ export class CreateZoneDto {
   })
   @IsInt()
   @IsNotEmpty()
+  @Min(0)
+  @Max(1000000)
   maximumCapacity: number;
 
   @ApiProperty({

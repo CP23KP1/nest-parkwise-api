@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 
 export class CreateDeviceDto {
   @ApiProperty({
@@ -40,6 +47,8 @@ export class CreateDeviceDto {
   })
   @IsNumber()
   @IsNotEmpty()
+  @Min(0)
+  @Max(100000000)
   price: number;
 
   @ApiProperty({

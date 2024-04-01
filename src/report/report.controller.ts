@@ -67,7 +67,7 @@ export class ReportController {
   }
 
   @Get('by-days')
-  @ApiOperation({ summary: '' })
+  @ApiOperation({ summary: 'Find report by days' })
   @ApiQuery({ name: 'month', required: false, example: '10' })
   @ApiQuery({ name: 'year', required: false, example: '2021' })
   @UseGuards(JwtAuthGuard)

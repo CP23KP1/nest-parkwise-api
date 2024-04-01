@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 
 export class CreateParkingDto {
   @ApiProperty({
@@ -24,6 +31,8 @@ export class CreateParkingDto {
   })
   @IsNumber()
   @IsNotEmpty()
+  @Min(0)
+  @Max(1000000)
   amount: number;
 
   @ApiProperty({
