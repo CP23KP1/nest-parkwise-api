@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { CreateEmergencyDto } from '../dtos/create-emergency.dto';
+import { CreateEmergencyDto } from './dtos/create-emergency.dto';
 
 @Injectable()
 export class EmergencyService {

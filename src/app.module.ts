@@ -9,7 +9,7 @@ import { AdminModule } from './admin/admin.module';
 import { ParkingModule } from './parking/parking.module';
 import { UploadModule } from './upload/upload.module';
 import { ConfigModule } from '@nestjs/config';
-import { EmergencyModule } from './emergency/modules/emergency.module';
+import { EmergencyModule } from './emergency/emergency.module';
 import { MailModule } from './mail/mail.module';
 import { ReportModule } from './report/report.module';
 

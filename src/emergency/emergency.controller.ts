@@ -16,11 +16,11 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { EmergencyService } from '../services/emergency.service';
+import { EmergencyService } from './emergency.service';
 import JwtAuthGuard from 'src/auth/jwt/jwt-auth.guard';
 import { CustomApiUnauthorized } from 'src/shared/decorators/custom-api-unauthoirzed.decorator';
-import { CreateEmergencyDto } from '../dtos/create-emergency.dto';
-import { EmergencyResponse } from '../dtos/emergency-responses';
+import { CreateEmergencyDto } from './dtos/create-emergency.dto';
+import { EmergencyResponse } from './dtos/emergency-responses';
 
 @Controller('emergencies')
 @ApiTags('Emergency')
