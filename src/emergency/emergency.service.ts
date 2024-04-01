@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateEmergencyDto } from './dtos/create-emergency.dto';
 
@@ -58,19 +63,26 @@ export class EmergencyService {
     });
   }
 
-  async deleteEmergencyData(id: number) {
-    try {
-      const emergencyData = await this.prismaService.emergency.delete({
-        where: {
-          id: id,
-        },
-      });
-      return emergencyData;
-    } catch {
-      throw new HttpException(
-        'Something wrong with this',
-        HttpStatus.BAD_REQUEST,
-      );
+  async findOne(id: number) {
+    const emergency = await this.prismaService.emergency.findUnique({
+      where: { id },
+    });
+
+    if (!emergency) {
+      throw new NotFoundException('Emergency not found');
     }
+
+    return emergency;
+  }
+
+  async deleteEmergencyData(id: number) {
+    await this.findOne(id);
+
+    const emergencyData = await this.prismaService.emergency.delete({
+      where: {
+        id: id,
+      },
+    });
+    return emergencyData;
   }
 }
