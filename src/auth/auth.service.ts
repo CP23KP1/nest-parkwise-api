@@ -23,7 +23,7 @@ export class AuthService {
 
   async staffEmailCheck(email: string) {
     const staff = await this.prismaService.staff.findFirst({
-      where: { email },
+      where: { email, deletedAt: null },
     });
 
     if (!staff) {
@@ -148,7 +148,7 @@ export class AuthService {
   async forgotPassword(email: string) {
     try {
       const staff = await this.prismaService.staff.findFirst({
-        where: { email },
+        where: { email, deletedAt: null },
       });
       if (!staff) {
         throw new UnauthorizedException('Email not found');
