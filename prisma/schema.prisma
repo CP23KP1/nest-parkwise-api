@@ -22,21 +22,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model CarGuest {
-
-  id           Int       @id @default(autoincrement())
-  licensePlate String
-  color        String
-  brand        String
-  model        String
-  year         Int
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  deletedAt    DateTime?
-  Log          Log[]
-
-  @@map("car_guest")
-}
 
 model Car {
 
@@ -96,8 +81,6 @@ model Log {
   staff          Staff     @relation(fields: [staffId], references: [id])
   carId          Int?
   car            Car?      @relation(fields: [carId], references: [id])
-  carGuestId     Int?
-  carGuest       CarGuest? @relation(fields: [carGuestId], references: [id])
   licenseUrl     String?   @db.Text
   arrowDirection String?
   timestamp      DateTime  @default(now())
